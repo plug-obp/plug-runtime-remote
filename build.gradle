@@ -1,0 +1,6 @@
+dependencies {
+	compile group: 'fr.ensta-bretagne', name: 'plug-core', version: '+'
+}
+project.ext["ideaGroupName"]="plug/languages"
+
+apply plugin: 'java-library-distribution'
