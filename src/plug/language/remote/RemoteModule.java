@@ -10,14 +10,11 @@ import plug.language.remote.runtime.RemoteRuntime;
  */
 public class RemoteModule implements ILanguageModule<RemoteRuntime> {
     RemoteLoader loader = new RemoteLoader();
-    RemoteRuntimeView runtimeView;
 
-    static RemoteModule instance = new RemoteModule();
-
-    public static RemoteModule getInstance() {
-        return instance;
+    @Override
+    public String[] getExtensions() {
+        return new String[0];
     }
-
     @Override
     public String getName() {
         return "ViaTCP";
