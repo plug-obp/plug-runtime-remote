@@ -17,7 +17,7 @@ public class RemoteModule implements ILanguageModule<RemoteRuntime> {
     }
     @Override
     public String getName() {
-        return "ViaTCP";
+        return "RemoteModule";
     }
 
     @Override
