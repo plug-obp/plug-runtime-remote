@@ -16,7 +16,6 @@ The remote runtime sends requests to the distant runtime:
 - Fireable transitions from and (2)
 - Fire transition (3).
 
-
 **Initial configurations**
 
 Sends `11` and waits for `[4:configurations_count][8:configuration_size] ([configuration_size:configuration_id]){configurations_count}`
