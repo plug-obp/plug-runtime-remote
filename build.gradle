@@ -1,6 +1,16 @@
+buildscript {
+	repositories {
+		mavenLocal()
+		maven { url "http://mocs-artefacts.ensta-bretagne.fr/plug-repo/" }
+	}
+	dependencies {
+		classpath group: 'fr.ensta-bretagne', name: 'plug-plugin', version: '+'
+	}
+}
+
+apply plugin: 'plug.plugin'
+
 dependencies {
 	compile group: 'fr.ensta-bretagne', name: 'plug-core', version: '+'
 }
-project.ext["ideaGroupName"]="plug/languages"
 
-apply plugin: 'java-library-distribution'
