@@ -11,6 +11,7 @@ buildscript {
 apply plugin: 'plug.plugin'
 
 dependencies {
+	compile group: 'io.github.teodorov', name: 'announce4j', version: '+'
 	compile group: 'fr.ensta-bretagne', name: 'plug-core', version: '+'
 
 	compile group: 'com.fasterxml.jackson.core', name:'jackson-databind', version:'2.7.2'
