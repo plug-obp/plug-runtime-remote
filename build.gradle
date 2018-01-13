@@ -12,5 +12,7 @@ apply plugin: 'plug.plugin'
 
 dependencies {
 	compile group: 'fr.ensta-bretagne', name: 'plug-core', version: '+'
+
+	compile group: 'com.fasterxml.jackson.core', name:'jackson-databind', version:'2.7.2'
 }
 

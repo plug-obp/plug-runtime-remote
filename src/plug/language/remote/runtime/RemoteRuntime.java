@@ -1,12 +1,13 @@
 package plug.language.remote.runtime;
 
-import plug.core.IFiredTransition;
-import plug.core.ILanguageRuntime;
-import plug.language.remote.driver.TCPDriver;
-import plug.statespace.transitions.FiredTransition;
-
 import java.util.Collection;
 import java.util.Set;
+import plug.core.IExecutionController;
+import plug.core.IFiredTransition;
+import plug.core.ILanguageRuntime;
+import plug.events.ExecutionEndedEvent;
+import plug.language.remote.driver.TCPDriver;
+import plug.statespace.transitions.FiredTransition;
 
 /**
  * Implementation of the runtime via tcp.
@@ -19,6 +20,11 @@ public class RemoteRuntime implements ILanguageRuntime<Configuration, FireableTr
      * The instance of the driver
      */
     public TCPDriver driver;
+
+    /**
+     * The execution controller
+     */
+    private IExecutionController<Configuration, ?> executionController;
 
     /**
      * Constructor of the ViaTCPRuntime.
@@ -42,7 +48,6 @@ public class RemoteRuntime implements ILanguageRuntime<Configuration, FireableTr
 
     @Override
     public synchronized Set<Configuration> initialConfigurations() {
-
         return driver.initialConfigurations();
     }
 
@@ -53,9 +58,17 @@ public class RemoteRuntime implements ILanguageRuntime<Configuration, FireableTr
 
     @Override
     public synchronized IFiredTransition<Configuration, ?> fireOneTransition(Configuration source, FireableTransition transition) {
-
         Set<Configuration> target = driver.fireOneTransition(source, transition);
+         return new FiredTransition<>(source, target, transition);
+    }
 
-        return new FiredTransition<>(source, target, transition);
+    @Override
+    public void setExecutionController(IExecutionController<Configuration, ?> executionController) {
+        this.executionController = executionController;
+        if (executionController != null) {
+            executionController.getAnnouncer().when(ExecutionEndedEvent.class, (announcer, event) -> {
+                driver.disconnect();
+            });
+        }
     }
 }

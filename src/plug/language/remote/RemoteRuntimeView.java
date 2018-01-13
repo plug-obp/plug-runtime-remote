@@ -1,12 +1,11 @@
 package plug.language.remote;
 
-import javax.swing.tree.TreeNode;
-
-import plug.language.remote.runtime.Configuration;
-import plug.language.remote.runtime.FireableTransition;
 import javafx.scene.control.TreeItem;
+import javax.swing.tree.TreeNode;
 import plug.core.ILanguageRuntime;
 import plug.core.IRuntimeView;
+import plug.language.remote.runtime.Configuration;
+import plug.language.remote.runtime.FireableTransition;
 import plug.language.remote.runtime.RemoteRuntime;
 
 
@@ -22,8 +21,7 @@ public class RemoteRuntimeView implements IRuntimeView<Configuration, FireableTr
 
 	@Override
 	public ILanguageRuntime<Configuration, FireableTransition> getRuntime() {
-		// TODO Auto-generated method stub
-		return null;
+    	return runtime;
 	}
 
 	@Override

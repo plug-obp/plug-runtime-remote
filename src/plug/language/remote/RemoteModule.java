@@ -13,7 +13,7 @@ public class RemoteModule implements ILanguageModule<RemoteRuntime> {
 
     @Override
     public String[] getExtensions() {
-        return new String[0];
+        return new String[] { ".remote"};
     }
     @Override
     public String getName() {
