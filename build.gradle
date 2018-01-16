@@ -1,6 +1,5 @@
 buildscript {
 	repositories {
-		mavenLocal()
 		maven { url "http://mocs-artefacts.ensta-bretagne.fr/plug-repo/" }
 	}
 	dependencies {
