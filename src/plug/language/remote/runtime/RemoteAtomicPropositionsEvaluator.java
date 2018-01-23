@@ -21,8 +21,4 @@ public class RemoteAtomicPropositionsEvaluator implements IAtomicPropositionsEva
 	public boolean[] getAtomicPropositionValuations(Configuration target) {
 		return driver.getAtomicPropositionValuations(target);
 	}
-
-	public boolean[] getAtomicPropositionValuations(Configuration source, Configuration target, FireableTransition transition) {
-		return driver.getAtomicPropositionValuations(source, target, transition);
-	}
 }

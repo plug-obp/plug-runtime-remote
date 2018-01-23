@@ -172,39 +172,10 @@ public class TCPDriver extends AbstractDriver {
         }
     }
 
-    public boolean[] getAtomicPropositionValuations(Configuration source, Configuration target, FireableTransition transition) {
-        try {
-            //send request
-            RequestKind.REQ_ATOMIC_PROPOSITION_VALUATIONS.writeOn(outputStream);
-            source.writeOn(outputStream);
-            target.writeOn(outputStream);
-            transition.writeOn(outputStream);
-            outputStream.flush();
-
-            //read number of values
-            byte[] data = new byte[4];
-            inputStream.read(data, 0, 4);
-            int valueCount = ByteBuffer.wrap(data).order(ByteOrder.LITTLE_ENDIAN).getInt();
-
-            byte[] rawValues = new byte[valueCount];
-            inputStream.read(rawValues);
-
-            boolean[] values = new boolean[valueCount];
-            for (int i = 0; i < valueCount; i++) {
-                values[i] = rawValues[i] > 0;
-            }
-
-            return values;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return new boolean[] {};
-        }
-    }
-
     public boolean[] getAtomicPropositionValuations(Configuration target) {
         try {
             //send request
-            RequestKind.REQ_SIMPLE_ATOMIC_PROPOSITION_VALUATIONS.writeOn(outputStream);
+            RequestKind.REQ_ATOMIC_PROPOSITION_VALUATIONS.writeOn(outputStream);
             target.writeOn(outputStream);
             outputStream.flush();
 
