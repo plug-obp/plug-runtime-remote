@@ -1,5 +1,6 @@
 package plug.language.remote.runtime;
 
+import announce4j.Announcer;
 import java.util.Collection;
 import java.util.Set;
 import plug.core.IAtomicPropositionsEvaluator;
@@ -67,14 +68,10 @@ public class RemoteRuntime implements ILanguageRuntime<Configuration, FireableTr
     }
 
     @Override
-    public void setExecutionController(IExecutionController<Configuration, ?> executionController) {
-        this.executionController = executionController;
-        if (executionController != null) {
-            executionController.getAnnouncer().when(ExecutionEndedEvent.class, (announcer, event) -> {
-                driver.disconnect();
-            });
-        }
-
+    public void setAnnouncer(Announcer announcer) {
+        announcer.when(ExecutionEndedEvent.class, (sender, event) -> {
+            driver.disconnect();
+        });
     }
 
     @Override
