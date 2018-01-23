@@ -1,19 +1,19 @@
 package plug.language.remote.driver;
 
-import plug.language.remote.protocol.RequestKind;
-import plug.language.remote.runtime.Configuration;
-import plug.language.remote.runtime.FireableTransition;
-
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+import plug.language.remote.protocol.RequestKind;
+import plug.language.remote.runtime.Configuration;
+import plug.language.remote.runtime.FireableTransition;
 
 /**
  * Created by Ciprian TEODOROV on 08/09/17.
@@ -145,4 +145,87 @@ public class TCPDriver extends AbstractDriver {
         }
         return configurations;
     }
+
+    public void registerAtomicPropositions(String[] atomicPropositions) {
+        try {
+            //send request
+            RequestKind.REQ_REGISTER_ATOMIC_PROPOSITIONS.writeOn(outputStream);
+            ByteBuffer data = ByteBuffer.allocate(4).order(ByteOrder.LITTLE_ENDIAN);
+            data.putInt(atomicPropositions.length);
+            outputStream.write(data.array());
+
+            for (String atomicProposition : atomicPropositions) {
+                byte[] bytes = atomicProposition.getBytes(StandardCharsets.UTF_8);
+
+                data = ByteBuffer.allocate(4).order(ByteOrder.LITTLE_ENDIAN);
+                data.putInt(bytes.length);
+                outputStream.write(data.array());
+
+                outputStream.write(bytes);
+            }
+
+            outputStream.flush();
+
+            // nothing to wait for
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public boolean[] getAtomicPropositionValuations(Configuration source, Configuration target, FireableTransition transition) {
+        try {
+            //send request
+            RequestKind.REQ_ATOMIC_PROPOSITION_VALUATIONS.writeOn(outputStream);
+            source.writeOn(outputStream);
+            target.writeOn(outputStream);
+            transition.writeOn(outputStream);
+            outputStream.flush();
+
+            //read number of values
+            byte[] data = new byte[4];
+            inputStream.read(data, 0, 4);
+            int valueCount = ByteBuffer.wrap(data).order(ByteOrder.LITTLE_ENDIAN).getInt();
+
+            byte[] rawValues = new byte[valueCount];
+            inputStream.read(rawValues);
+
+            boolean[] values = new boolean[valueCount];
+            for (int i = 0; i < valueCount; i++) {
+                values[i] = rawValues[i] > 0;
+            }
+
+            return values;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return new boolean[] {};
+        }
+    }
+
+    public boolean[] getAtomicPropositionValuations(Configuration target) {
+        try {
+            //send request
+            RequestKind.REQ_SIMPLE_ATOMIC_PROPOSITION_VALUATIONS.writeOn(outputStream);
+            target.writeOn(outputStream);
+            outputStream.flush();
+
+            //read number of values
+            byte[] data = new byte[4];
+            inputStream.read(data, 0, 4);
+            int valueCount = ByteBuffer.wrap(data).order(ByteOrder.LITTLE_ENDIAN).getInt();
+
+            byte[] rawValues = new byte[valueCount];
+            inputStream.read(rawValues);
+
+            boolean[] values = new boolean[valueCount];
+            for (int i = 0; i < valueCount; i++) {
+                values[i] = rawValues[i] > 0;
+            }
+
+            return values;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return new boolean[] {};
+        }
+    }
+
 }

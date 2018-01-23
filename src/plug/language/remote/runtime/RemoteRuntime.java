@@ -2,6 +2,7 @@ package plug.language.remote.runtime;
 
 import java.util.Collection;
 import java.util.Set;
+import plug.core.IAtomicPropositionsEvaluator;
 import plug.core.IExecutionController;
 import plug.core.IFiredTransition;
 import plug.core.ILanguageRuntime;
@@ -26,6 +27,8 @@ public class RemoteRuntime implements ILanguageRuntime<Configuration, FireableTr
      */
     private IExecutionController<Configuration, ?> executionController;
 
+    private RemoteAtomicPropositionsEvaluator atomicPropositionsEvaluator;
+
     /**
      * Constructor of the ViaTCPRuntime.
      *
@@ -43,6 +46,7 @@ public class RemoteRuntime implements ILanguageRuntime<Configuration, FireableTr
      */
     public boolean initializeRuntime() {
         driver.connect();
+        atomicPropositionsEvaluator = new RemoteAtomicPropositionsEvaluator(driver);
         return true;
     }
 
@@ -70,5 +74,11 @@ public class RemoteRuntime implements ILanguageRuntime<Configuration, FireableTr
                 driver.disconnect();
             });
         }
+
+    }
+
+    @Override
+    public IAtomicPropositionsEvaluator getAtomicPropositionEvaluator() {
+        return atomicPropositionsEvaluator;
     }
 }

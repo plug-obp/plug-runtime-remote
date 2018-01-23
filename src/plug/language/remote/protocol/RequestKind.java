@@ -6,7 +6,10 @@ import java.io.OutputStream;
 public enum RequestKind {
     REQ_INITIAL_CONFIGURATIONS((byte) 1),
     REQ_FIREABLE_TRANSITIONS_FROM((byte) 2),
-    REQ_FIRE_TRANSITION((byte) 3);
+    REQ_FIRE_TRANSITION((byte) 3),
+    REQ_REGISTER_ATOMIC_PROPOSITIONS((byte) 4),
+    REQ_ATOMIC_PROPOSITION_VALUATIONS((byte) 5),
+    REQ_SIMPLE_ATOMIC_PROPOSITION_VALUATIONS((byte) 6);
 
     private byte value;
 
