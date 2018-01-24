@@ -1,6 +1,7 @@
 package plug.language.remote.runtime;
 
 import announce4j.Announcer;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Set;
 import plug.core.IAtomicPropositionsEvaluator;
@@ -46,9 +47,14 @@ public class RemoteRuntime implements ILanguageRuntime<Configuration, FireableTr
      * @return true if initialized.
      */
     public boolean initializeRuntime() {
-        driver.connect();
-        atomicPropositionsEvaluator = new RemoteAtomicPropositionsEvaluator(driver);
-        return true;
+        try {
+            driver.connect();
+            atomicPropositionsEvaluator = new RemoteAtomicPropositionsEvaluator(driver);
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     @Override

@@ -3,6 +3,7 @@ package plug.language.remote.driver;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
+import java.net.ConnectException;
 import java.net.Socket;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -30,13 +31,32 @@ public class TCPDriver extends AbstractDriver {
         this.port = port;
     }
 
-    public void connect() {
-        try {
-            socket = new Socket(address, port);
-            inputStream = new BufferedInputStream(this.socket.getInputStream());
-            outputStream = new BufferedOutputStream(this.socket.getOutputStream());
-        } catch (IOException e) {
-            e.printStackTrace();
+    public void connect() throws IOException {
+        // tries to connect several times
+        ConnectException exception = null;
+        for (int i=0; i<10; i+=1) {
+            try {
+                System.out.println("Connecting to " + address + ":" + port + " (attempt " + (i+1) + ")");
+                socket = new Socket(address, port);
+                inputStream = new BufferedInputStream(this.socket.getInputStream());
+                outputStream = new BufferedOutputStream(this.socket.getOutputStream());
+
+                // success
+                exception = null;
+                break;
+
+            } catch (ConnectException e) {
+                exception = e;
+                try {
+                    Thread.sleep(250);
+                } catch (InterruptedException e1) { /* nothing to do */ }
+                continue;
+            }
+
+        }
+
+        if (exception != null) {
+            throw exception;
         }
     }
 

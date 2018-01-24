@@ -43,13 +43,6 @@ public class RemoteLoader implements ILanguageLoader {
 
 				// sets the host to localhost
 				host = "localhost";
-
-				// waits (and yield) to allow the command to listen to the connection.
-				try {
-					Thread.sleep(description.getDelay());
-				} catch (InterruptedException e) {
-					// nothing to do
-				}
 			}
 
 			RemoteRuntime runtime = new RemoteRuntime(host, port);
