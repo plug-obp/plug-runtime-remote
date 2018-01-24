@@ -19,9 +19,9 @@ public class RemoteDescription {
 			String[] command,
 			@JsonProperty("delay")
 			int delay,
-			@JsonProperty("host")
+			@JsonProperty(value = "host", defaultValue = "")
 			String host,
-			@JsonProperty("port")
+			@JsonProperty(value = "port", defaultValue = "0")
 			int port)
 	{
 		this.command = command;

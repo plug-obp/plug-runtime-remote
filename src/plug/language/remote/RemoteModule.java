@@ -1,5 +1,7 @@
 package plug.language.remote;
 
+import java.util.LinkedList;
+import java.util.Random;
 import plug.core.ILanguageLoader;
 import plug.core.ILanguageModule;
 import plug.core.IRuntimeView;
@@ -28,5 +30,22 @@ public class RemoteModule implements ILanguageModule<RemoteRuntime> {
     @Override
     public IRuntimeView getRuntimeView(RemoteRuntime runtime) {
         return new RemoteRuntimeView(runtime);
+    }
+
+
+    private final static Random random = new Random();
+    private final static int startPort = 3456;
+    private final static LinkedList<Integer> lastSelectedPorts = new LinkedList<>();
+
+    public static int newPort() {
+        int port = startPort + random.nextInt(0xFFFF - startPort);
+        while (lastSelectedPorts.indexOf(port) >= 0) {
+            port = startPort + random.nextInt(0xFFFF - startPort);
+        }
+        if (lastSelectedPorts.size() > 10) {
+            lastSelectedPorts.removeFirst();
+        }
+        lastSelectedPorts.addLast(port);
+        return port;
     }
 }
