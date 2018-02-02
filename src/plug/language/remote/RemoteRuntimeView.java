@@ -1,9 +1,9 @@
 package plug.language.remote;
 
-import javafx.scene.control.TreeItem;
 import javax.swing.tree.TreeNode;
 import plug.core.ILanguageRuntime;
 import plug.core.IRuntimeView;
+import plug.core.view.ConfigurationItem;
 import plug.language.remote.runtime.Configuration;
 import plug.language.remote.runtime.FireableTransition;
 import plug.language.remote.runtime.RemoteRuntime;
@@ -25,15 +25,8 @@ public class RemoteRuntimeView implements IRuntimeView<Configuration, FireableTr
 	}
 
 	@Override
-	public TreeNode getConfigurationTreeModel(Configuration value) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public TreeItem getConfigurationTreeModelFx(Configuration value) {
-		// TODO Auto-generated method stub
-		return null;
+	public ConfigurationItem getConfigurationItem(Configuration value) {
+		return new ConfigurationItem(value.toString(), "configuration", null, null);
 	}
 
 	@Override
