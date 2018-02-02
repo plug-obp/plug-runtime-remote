@@ -26,7 +26,7 @@ public class RemoteRuntimeView implements IRuntimeView<Configuration, FireableTr
 
 	@Override
 	public ConfigurationItem getConfigurationItem(Configuration value) {
-		return new ConfigurationItem(value.toString(), "configuration", null, null);
+		return new ConfigurationItem("configuration", value.toString(), null, null);
 	}
 
 	@Override
