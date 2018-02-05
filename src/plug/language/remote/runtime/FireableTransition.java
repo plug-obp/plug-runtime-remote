@@ -9,7 +9,7 @@ import java.io.OutputStream;
  */
 public class FireableTransition
 {
-	byte rawTransitionData[];
+	public final byte rawTransitionData[];
 
 	public FireableTransition(byte[] data) {
 		rawTransitionData = data;

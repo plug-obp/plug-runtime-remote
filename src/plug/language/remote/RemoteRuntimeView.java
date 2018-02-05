@@ -1,6 +1,6 @@
 package plug.language.remote;
 
-import javax.swing.tree.TreeNode;
+import java.util.Arrays;
 import plug.core.ILanguageRuntime;
 import plug.core.IRuntimeView;
 import plug.core.view.ConfigurationItem;
@@ -30,12 +30,8 @@ public class RemoteRuntimeView implements IRuntimeView<Configuration, FireableTr
 	}
 
 	@Override
-	public TreeNode getFireableTransitionTreeModel(FireableTransition transition) {
-		// TODO Auto-generated method stub
-		return null;
+	public String getFireableTransitionDescription(FireableTransition transition) {
+    	return "Remote " + Arrays.toString(transition.rawTransitionData);
 	}
 
-
-
-   
 }
