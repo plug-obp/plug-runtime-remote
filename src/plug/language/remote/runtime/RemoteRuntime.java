@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Set;
 import plug.core.IAtomicPropositionsEvaluator;
-import plug.core.IExecutionController;
 import plug.core.IFiredTransition;
 import plug.core.ILanguageRuntime;
 import plug.events.ExecutionEndedEvent;
@@ -23,11 +22,6 @@ public class RemoteRuntime implements ILanguageRuntime<Configuration, FireableTr
      * The instance of the driver
      */
     public TCPDriver driver;
-
-    /**
-     * The execution controller
-     */
-    private IExecutionController<Configuration, ?> executionController;
 
     private RemoteAtomicPropositionsEvaluator atomicPropositionsEvaluator;
 
