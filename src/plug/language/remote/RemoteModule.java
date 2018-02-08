@@ -2,7 +2,6 @@ package plug.language.remote;
 
 import java.util.LinkedList;
 import java.util.Random;
-import plug.core.ILanguageLoader;
 import plug.core.ILanguageModule;
 import plug.core.IRuntimeView;
 import plug.language.remote.runtime.RemoteRuntime;
@@ -23,7 +22,7 @@ public class RemoteModule implements ILanguageModule<RemoteRuntime> {
     }
 
     @Override
-    public ILanguageLoader getLoader() {
+    public RemoteLoader getLoader() {
         return loader;
     }
 

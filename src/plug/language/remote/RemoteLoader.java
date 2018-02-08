@@ -7,14 +7,13 @@ import java.net.URI;
 import java.nio.file.Paths;
 import java.util.Map;
 import plug.core.ILanguageLoader;
-import plug.core.ILanguageRuntime;
 import plug.language.remote.runtime.RemoteRuntime;
 import plug.utils.exec.ProcessRunner;
 
-public class RemoteLoader implements ILanguageLoader {
+public class RemoteLoader implements ILanguageLoader<RemoteRuntime> {
 
 	@Override
-	public ILanguageRuntime getRuntime(URI modelURI, Map<String, Object> options) {
+	public RemoteRuntime getRuntime(URI modelURI, Map<String, Object> options) {
 		try {
 			RemoteDescription description = new ObjectMapper().readValue(modelURI.toURL(), RemoteDescription.class);
 
