@@ -1,8 +1,7 @@
 package plug.language.remote;
 
 import java.io.IOException;
-
-import plug.events.ExecutionEndedEvent;
+import plug.core.IStateSpaceManager;
 import plug.explorer.BFSExplorer;
 import plug.language.remote.runtime.Configuration;
 import plug.language.remote.runtime.FireableTransition;
@@ -26,11 +25,12 @@ public class Main
     {
         RemoteRuntime runtime = new RemoteRuntime("localhost", 1234);
         runtime.initializeRuntime();
-        BFSExplorer explorer = new BFSExplorer();
-        explorer.setRuntime(runtime);
-        explorer.stateSpaceManager = new SimpleStateSpaceManager<Configuration, FireableTransition>();
-        explorer.stateSpaceManager.fullConfigurationStorage();
-        explorer.stateSpaceManager.fullTransitionStorage();
+
+        IStateSpaceManager<Configuration, FireableTransition> stateSpaceManager = new SimpleStateSpaceManager<>();
+        stateSpaceManager.fullConfigurationStorage();
+        stateSpaceManager.fullTransitionStorage();
+
+        BFSExplorer explorer = new BFSExplorer(runtime, stateSpaceManager);
 
         explorer.explore();
 
@@ -39,9 +39,9 @@ public class Main
         //explorer.announcer.when(ExecutionEndedEvent.class, (x, y)->runtime.driver.disconnect());
         
         // Display results of the exploration.
-        System.out.println("Exploration finished : numConfigurations = " + explorer.stateSpaceManager.size() + "; numTransitions = " + explorer.stateSpaceManager.transitionCount());
+        System.out.println("Exploration finished : numConfigurations = " + stateSpaceManager.size() + "; numTransitions = " + stateSpaceManager.transitionCount());
     
         // Store the graph in a file
-        new StateSpace2TGF().toTGF(explorer.stateSpaceManager.getGraphView(), true, "PingPongPang.tgf");
+        new StateSpace2TGF().toTGF(stateSpaceManager.getGraphView(), true, "PingPongPang.tgf");
     }
 }
