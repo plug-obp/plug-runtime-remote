@@ -1,6 +1,6 @@
 package plug.language.remote.runtime;
 
-import plug.core.IConfiguration;
+import plug.core.defaults.DefaultConfiguration;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -10,7 +10,7 @@ import java.util.Arrays;
  * Class for configuration of the model.
  * @author valentin
  */
-public class Configuration implements IConfiguration<Configuration> {
+public class Configuration extends DefaultConfiguration<Configuration> {
 	public byte[] state;
 
 	public Configuration() {

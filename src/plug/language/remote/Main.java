@@ -32,7 +32,7 @@ public class Main
 
         BFSExplorer explorer = new BFSExplorer(runtime, stateSpaceManager);
 
-        explorer.explore();
+        explorer.execute();
 
         runtime.driver.disconnect();
 
