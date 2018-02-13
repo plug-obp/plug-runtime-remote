@@ -1,6 +1,8 @@
 package plug.language.remote;
 
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import plug.core.ILanguageRuntime;
 import plug.core.IRuntimeView;
 import plug.core.view.ConfigurationItem;
@@ -25,8 +27,8 @@ public class RemoteRuntimeView implements IRuntimeView<Configuration, FireableTr
 	}
 
 	@Override
-	public ConfigurationItem getConfigurationItem(Configuration value) {
-		return new ConfigurationItem("configuration", value.toString(), null, null);
+	public List<ConfigurationItem> getConfigurationItems(Configuration value) {
+		return Collections.singletonList(new ConfigurationItem("process", value.toString(), null, null));
 	}
 
 	@Override
