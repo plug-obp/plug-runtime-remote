@@ -9,7 +9,9 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -71,6 +73,19 @@ public class TCPDriver extends AbstractDriver {
         }
     }
 
+    private int readInt(int size) throws IOException {
+		byte[] data = new byte[size];
+		inputStream.read(data, 0, size);
+		return ByteBuffer.wrap(data).order(ByteOrder.LITTLE_ENDIAN).getInt();
+	}
+
+	private String readString() throws IOException {
+    	int size = readInt(4);
+		byte[] data = new byte[size];
+		inputStream.read(data, 0, size);
+    	return new String(data, StandardCharsets.UTF_8);
+	}
+
     @Override
     public Set<Configuration> initialConfigurations() {
         Set<Configuration> configurations = new HashSet<>();
@@ -80,19 +95,14 @@ public class TCPDriver extends AbstractDriver {
             RequestKind.REQ_INITIAL_CONFIGURATIONS.writeOn(outputStream);
             outputStream.flush();
 
-
-            byte data[] = new byte[4];
             //read number of configurations
-            inputStream.read(data, 0, 4);
-            int numConfigurations = ByteBuffer.wrap(data).order(ByteOrder.LITTLE_ENDIAN).getInt();
+            int numConfigurations = readInt(4);
             //read the configuration size
-            data = new byte[8];
-            inputStream.read(data, 0, 8);
-            int configurationSize = ByteBuffer.wrap(data).order(ByteOrder.LITTLE_ENDIAN).getInt();
+            int configurationSize = readInt(8);
 
             //read number of configurations
             for (int i = 0; i<numConfigurations;i++) {
-                data = new byte[configurationSize];
+                byte[] data = new byte[configurationSize];
                 inputStream.read(data, 0, configurationSize);
                 configurations.add(new Configuration(data));
             }
@@ -114,18 +124,14 @@ public class TCPDriver extends AbstractDriver {
             outputStream.flush();
 
 
-            byte data[] = new byte[4];
             //read number of transitions
-            inputStream.read(data, 0, 4);
-            int numTransitions = ByteBuffer.wrap(data).order(ByteOrder.LITTLE_ENDIAN).getInt();
+            int numTransitions = readInt(4);
             //read the transitions size
-            data = new byte[8];
-            inputStream.read(data, 0, 8);
-            int transitionSize = ByteBuffer.wrap(data).order(ByteOrder.LITTLE_ENDIAN).getInt();
+            int transitionSize = readInt(8);
 
             //read number of transitions
             for (int i = 0; i<numTransitions;i++) {
-                data = new byte[transitionSize];
+                byte[] data = new byte[transitionSize];
                 inputStream.read(data, 0, transitionSize);
                 fireableTransitions.add(new FireableTransition(data));
             }
@@ -146,19 +152,14 @@ public class TCPDriver extends AbstractDriver {
             toFire.writeOn(outputStream);
             outputStream.flush();
 
-
-            byte data[] = new byte[4];
             //read number of configurations
-            inputStream.read(data, 0, 4);
-            int numConfigurations = ByteBuffer.wrap(data).order(ByteOrder.LITTLE_ENDIAN).getInt();
+            int numConfigurations = readInt(4);
             //read the configuration size
-            data = new byte[8];
-            inputStream.read(data, 0, 8);
-            int configurationSize = ByteBuffer.wrap(data).order(ByteOrder.LITTLE_ENDIAN).getInt();
+            int configurationSize = readInt(8);
 
             //read number of configurations
             for (int i = 0; i<numConfigurations;i++) {
-                data = new byte[configurationSize];
+                byte[] data = new byte[configurationSize];
                 inputStream.read(data, 0, configurationSize);
                 configurations.add(new Configuration(data));
             }
@@ -203,9 +204,7 @@ public class TCPDriver extends AbstractDriver {
             outputStream.flush();
 
             //read number of values
-            byte[] data = new byte[4];
-            inputStream.read(data, 0, 4);
-            int valueCount = ByteBuffer.wrap(data).order(ByteOrder.LITTLE_ENDIAN).getInt();
+			int valueCount = readInt(4);
 
             byte[] rawValues = new byte[valueCount];
             inputStream.read(rawValues);
@@ -222,13 +221,50 @@ public class TCPDriver extends AbstractDriver {
         }
     }
 
+    private ConfigurationItem readConfigurationItem() throws IOException {
+		String type = readString();
+		String name = readString();
+		String icon = readString();
+
+		List<ConfigurationItem> children = new ArrayList<>();
+		int childrenCount = readInt(4);
+        for (int i = 0; i < childrenCount; i++) {
+            children.add(readConfigurationItem());
+        }
+
+    	return new ConfigurationItem(type, name, icon, children);
+	}
+
     @Override
     public List<ConfigurationItem> getConfigurationItems(Configuration value) {
-        return null;
+    	try {
+			RequestKind.REQ_CONFIGURATION_ITEMS.writeOn(outputStream);
+			value.writeOn(outputStream);
+			outputStream.flush();
+
+			//read result
+            List<ConfigurationItem> items = new ArrayList<>();
+            int itemsCount = readInt(4);
+            for (int i = 0; i < itemsCount; i++) {
+                items.add(readConfigurationItem());
+            }
+			return items;
+		} catch (IOException e) {
+			return Collections.emptyList();
+		}
     }
 
     @Override
     public String getFireableTransitionDescription(FireableTransition transition) {
-        return null;
+        try {
+            RequestKind.REQ_FIREABLE_TRANSITION_DESCRIPTION.writeOn(outputStream);
+            transition.writeOn(outputStream);
+            outputStream.flush();
+
+            //read result
+            return readString();
+        } catch (IOException e) {
+            return "Transition " + Arrays.toString(transition.rawTransitionData);
+        }
     }
 }
