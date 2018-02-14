@@ -1,6 +1,5 @@
 package plug.language.remote;
 
-import java.util.Arrays;
 import java.util.List;
 import plug.core.ILanguageRuntime;
 import plug.core.IRuntimeView;
@@ -28,12 +27,12 @@ public class RemoteRuntimeView implements IRuntimeView<Configuration, FireableTr
 	@Override
 	public List<ConfigurationItem> getConfigurationItems(Configuration value) {
     	return runtime.driver.getConfigurationItems(value);
-		//return Collections.singletonList(new ConfigurationItem("process", value.toString(), null, null));
 	}
 
 	@Override
 	public String getFireableTransitionDescription(FireableTransition transition) {
-    	return "Remote " + Arrays.toString(transition.rawTransitionData);
+    	return runtime.driver.getFireableTransitionDescription(transition);
+    	//return "Remote " + Arrays.toString(transition.rawTransitionData);
 	}
 
 }
