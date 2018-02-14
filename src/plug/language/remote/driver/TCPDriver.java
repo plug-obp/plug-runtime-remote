@@ -11,7 +11,9 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import plug.core.view.ConfigurationItem;
 import plug.language.remote.protocol.RequestKind;
 import plug.language.remote.runtime.Configuration;
 import plug.language.remote.runtime.FireableTransition;
@@ -20,6 +22,7 @@ import plug.language.remote.runtime.FireableTransition;
  * Created by Ciprian TEODOROV on 08/09/17.
  */
 public class TCPDriver extends AbstractDriver {
+
     private String address;
     private int port;
     private Socket socket;
@@ -219,4 +222,13 @@ public class TCPDriver extends AbstractDriver {
         }
     }
 
+    @Override
+    public List<ConfigurationItem> getConfigurationItems(Configuration value) {
+        return null;
+    }
+
+    @Override
+    public String getFireableTransitionDescription(FireableTransition transition) {
+        return null;
+    }
 }

@@ -2,7 +2,9 @@ package plug.language.remote.driver;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
+import plug.core.view.ConfigurationItem;
 import plug.language.remote.runtime.Configuration;
 import plug.language.remote.runtime.FireableTransition;
 
@@ -18,4 +20,13 @@ public abstract class AbstractDriver {
 
     public abstract void registerAtomicPropositions(String[] atomicPropositions);
     public abstract boolean[] getAtomicPropositionValuations(Configuration source);
+
+
+    public abstract List<ConfigurationItem> getConfigurationItems(Configuration value);
+
+    public String getConfigurationDescription(Configuration value) {
+        return Integer.toHexString(value.hashCode());
+    }
+
+    public abstract String getFireableTransitionDescription(FireableTransition transition);
 }
