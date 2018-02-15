@@ -21,7 +21,7 @@ public class RemoteRuntime implements ILanguageRuntime<Configuration, FireableTr
     /**
      * The instance of the driver
      */
-    public TCPDriver driver;
+    protected final TCPDriver driver;
 
     private RemoteAtomicPropositionsEvaluator atomicPropositionsEvaluator;
 
@@ -33,6 +33,10 @@ public class RemoteRuntime implements ILanguageRuntime<Configuration, FireableTr
      */
     public RemoteRuntime(String address, int port) {
         driver = new TCPDriver(address, port);
+    }
+
+    public TCPDriver getDriver() {
+        return driver;
     }
 
     /**

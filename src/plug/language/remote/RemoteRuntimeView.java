@@ -13,7 +13,7 @@ import plug.language.remote.runtime.RemoteRuntime;
  * Created by Ciprian TEODOROV on 03/03/17.
  */
 public class RemoteRuntimeView implements IRuntimeView<Configuration, FireableTransition> {
-	RemoteRuntime runtime;
+	protected final RemoteRuntime runtime;
 
     public RemoteRuntimeView(RemoteRuntime runtime) {
         this.runtime = runtime;
@@ -26,12 +26,12 @@ public class RemoteRuntimeView implements IRuntimeView<Configuration, FireableTr
 
 	@Override
 	public List<ConfigurationItem> getConfigurationItems(Configuration value) {
-    	return runtime.driver.getConfigurationItems(value);
+    	return runtime.getDriver().getConfigurationItems(value);
 	}
 
 	@Override
 	public String getFireableTransitionDescription(FireableTransition transition) {
-    	return runtime.driver.getFireableTransitionDescription(transition);
+    	return runtime.getDriver().getFireableTransitionDescription(transition);
 	}
 
 }

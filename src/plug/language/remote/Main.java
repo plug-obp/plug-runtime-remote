@@ -34,7 +34,7 @@ public class Main
 
         explorer.execute();
 
-        runtime.driver.disconnect();
+        runtime.getDriver().disconnect();
 
         //explorer.announcer.when(ExecutionEndedEvent.class, (x, y)->runtime.driver.disconnect());
         
