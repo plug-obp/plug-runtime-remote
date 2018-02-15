@@ -32,7 +32,6 @@ public class RemoteRuntimeView implements IRuntimeView<Configuration, FireableTr
 	@Override
 	public String getFireableTransitionDescription(FireableTransition transition) {
     	return runtime.driver.getFireableTransitionDescription(transition);
-    	//return "Remote " + Arrays.toString(transition.rawTransitionData);
 	}
 
 }

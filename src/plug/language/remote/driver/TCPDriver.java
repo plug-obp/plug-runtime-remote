@@ -81,6 +81,7 @@ public class TCPDriver extends AbstractDriver {
 
 	private String readString() throws IOException {
     	int size = readInt(4);
+    	if (size < 0) return null;
 		byte[] data = new byte[size];
 		inputStream.read(data, 0, size);
     	return new String(data, StandardCharsets.UTF_8);
