@@ -23,7 +23,7 @@ public class RemoteRuntime implements ILanguageRuntime<Configuration, FireableTr
      */
     protected final TCPDriver driver;
 
-    private RemoteAtomicPropositionsEvaluator atomicPropositionsEvaluator;
+    protected final RemoteAtomicPropositionsEvaluator atomicPropositionsEvaluator;
 
     /**
      * Constructor of the ViaTCPRuntime.
@@ -33,6 +33,7 @@ public class RemoteRuntime implements ILanguageRuntime<Configuration, FireableTr
      */
     public RemoteRuntime(String address, int port) {
         driver = new TCPDriver(address, port);
+        atomicPropositionsEvaluator = new RemoteAtomicPropositionsEvaluator(driver);
     }
 
     public TCPDriver getDriver() {
@@ -47,7 +48,6 @@ public class RemoteRuntime implements ILanguageRuntime<Configuration, FireableTr
     public boolean initializeRuntime() {
         try {
             driver.connect();
-            atomicPropositionsEvaluator = new RemoteAtomicPropositionsEvaluator(driver);
             return true;
         } catch (IOException e) {
             e.printStackTrace();
