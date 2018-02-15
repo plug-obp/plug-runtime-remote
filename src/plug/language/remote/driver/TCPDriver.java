@@ -73,22 +73,24 @@ public class TCPDriver extends AbstractDriver {
         }
     }
 
+    private byte[] readData(int size) throws IOException {
+        byte[] data = new byte[size];
+        int read = 0;
+        do { read += inputStream.read(data, 0, size); } while (read < size);
+        return data;
+    }
+
     private int readInt(int size) throws IOException {
-		byte[] data = new byte[size];
-		inputStream.read(data, 0, size);
-		return ByteBuffer.wrap(data).order(ByteOrder.LITTLE_ENDIAN).getInt();
+		return ByteBuffer.wrap(readData(size)).order(ByteOrder.LITTLE_ENDIAN).getInt();
 	}
 
 	private String readString() throws IOException {
-    	int size = readInt(4);
-    	if (size < 0) return null;
-		byte[] data = new byte[size];
-		inputStream.read(data, 0, size);
-    	return new String(data, StandardCharsets.UTF_8);
+        int size = readInt(4);
+        return size < 0 ? null : new String(readData(size), StandardCharsets.UTF_8);
 	}
 
     @Override
-    public Set<Configuration> initialConfigurations() {
+    public synchronized Set<Configuration> initialConfigurations() {
         Set<Configuration> configurations = new HashSet<>();
 
         try {
@@ -103,9 +105,7 @@ public class TCPDriver extends AbstractDriver {
 
             //read number of configurations
             for (int i = 0; i<numConfigurations;i++) {
-                byte[] data = new byte[configurationSize];
-                inputStream.read(data, 0, configurationSize);
-                configurations.add(new Configuration(data));
+                configurations.add(new Configuration(readData(configurationSize)));
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -115,7 +115,7 @@ public class TCPDriver extends AbstractDriver {
     }
 
     @Override
-    public Collection<FireableTransition> fireableTransitionsFrom(Configuration configuration) {
+    public synchronized Collection<FireableTransition> fireableTransitionsFrom(Configuration configuration) {
         Collection<FireableTransition> fireableTransitions = new ArrayList<>();
 
         try {
@@ -124,7 +124,6 @@ public class TCPDriver extends AbstractDriver {
             configuration.writeOn(outputStream);
             outputStream.flush();
 
-
             //read number of transitions
             int numTransitions = readInt(4);
             //read the transitions size
@@ -132,9 +131,7 @@ public class TCPDriver extends AbstractDriver {
 
             //read number of transitions
             for (int i = 0; i<numTransitions;i++) {
-                byte[] data = new byte[transitionSize];
-                inputStream.read(data, 0, transitionSize);
-                fireableTransitions.add(new FireableTransition(data));
+                fireableTransitions.add(new FireableTransition(readData(transitionSize)));
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -144,7 +141,7 @@ public class TCPDriver extends AbstractDriver {
     }
 
     @Override
-    public Set<Configuration> fireOneTransition(Configuration source, FireableTransition toFire) {
+    public synchronized Set<Configuration> fireOneTransition(Configuration source, FireableTransition toFire) {
         Set<Configuration> configurations = new HashSet<>();
         try {
             //send request
@@ -160,9 +157,7 @@ public class TCPDriver extends AbstractDriver {
 
             //read number of configurations
             for (int i = 0; i<numConfigurations;i++) {
-                byte[] data = new byte[configurationSize];
-                inputStream.read(data, 0, configurationSize);
-                configurations.add(new Configuration(data));
+                configurations.add(new Configuration(readData(configurationSize)));
             }
 
         } catch (IOException e) {
@@ -171,7 +166,7 @@ public class TCPDriver extends AbstractDriver {
         return configurations;
     }
 
-    public void registerAtomicPropositions(String[] atomicPropositions) {
+    public synchronized void registerAtomicPropositions(String[] atomicPropositions) {
         try {
             //send request
             RequestKind.REQ_REGISTER_ATOMIC_PROPOSITIONS.writeOn(outputStream);
@@ -197,7 +192,7 @@ public class TCPDriver extends AbstractDriver {
         }
     }
 
-    public boolean[] getAtomicPropositionValuations(Configuration target) {
+    public synchronized boolean[] getAtomicPropositionValuations(Configuration target) {
         try {
             //send request
             RequestKind.REQ_ATOMIC_PROPOSITION_VALUATIONS.writeOn(outputStream);
@@ -206,9 +201,7 @@ public class TCPDriver extends AbstractDriver {
 
             //read number of values
 			int valueCount = readInt(4);
-
-            byte[] rawValues = new byte[valueCount];
-            inputStream.read(rawValues);
+            byte[] rawValues = readData(valueCount);
 
             boolean[] values = new boolean[valueCount];
             for (int i = 0; i < valueCount; i++) {
@@ -222,7 +215,7 @@ public class TCPDriver extends AbstractDriver {
         }
     }
 
-    private ConfigurationItem readConfigurationItem() throws IOException {
+    private synchronized ConfigurationItem readConfigurationItem() throws IOException {
 		String type = readString();
 		String name = readString();
 		String icon = readString();
@@ -237,7 +230,7 @@ public class TCPDriver extends AbstractDriver {
 	}
 
     @Override
-    public List<ConfigurationItem> getConfigurationItems(Configuration value) {
+    public synchronized List<ConfigurationItem> getConfigurationItems(Configuration value) {
     	try {
 			RequestKind.REQ_CONFIGURATION_ITEMS.writeOn(outputStream);
 			value.writeOn(outputStream);
@@ -256,7 +249,7 @@ public class TCPDriver extends AbstractDriver {
     }
 
     @Override
-    public String getFireableTransitionDescription(FireableTransition transition) {
+    public synchronized String getFireableTransitionDescription(FireableTransition transition) {
         try {
             RequestKind.REQ_FIREABLE_TRANSITION_DESCRIPTION.writeOn(outputStream);
             transition.writeOn(outputStream);
