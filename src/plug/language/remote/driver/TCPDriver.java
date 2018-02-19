@@ -166,7 +166,7 @@ public class TCPDriver extends AbstractDriver {
         return configurations;
     }
 
-    public synchronized void registerAtomicPropositions(String[] atomicPropositions) {
+    public synchronized int[] registerAtomicPropositions(String[] atomicPropositions) {
         try {
             //send request
             RequestKind.REQ_REGISTER_ATOMIC_PROPOSITIONS.writeOn(outputStream);
@@ -186,9 +186,16 @@ public class TCPDriver extends AbstractDriver {
 
             outputStream.flush();
 
-            // nothing to wait for
+            // reads the registered indexes
+            int size = readInt(4);
+            int[] result = new int[size];
+            for (int i = 0; i < size; i++) {
+                result[i] = readInt(4);
+            }
+            return result;
         } catch (IOException e) {
             e.printStackTrace();
+            return new int[]{};
         }
     }
 

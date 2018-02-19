@@ -13,8 +13,8 @@ public class RemoteAtomicPropositionsEvaluator implements IAtomicPropositionsEva
 	}
 
 	@Override
-	public void registerAtomicPropositions(String[] atomicPropositions) {
-		driver.registerAtomicPropositions(atomicPropositions);
+	public int[] registerAtomicPropositions(String[] atomicPropositions) {
+		return driver.registerAtomicPropositions(atomicPropositions);
 	}
 
 	@Override
