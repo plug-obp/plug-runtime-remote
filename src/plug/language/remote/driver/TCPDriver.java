@@ -13,6 +13,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import plug.core.view.ConfigurationItem;
@@ -141,8 +142,8 @@ public class TCPDriver extends AbstractDriver {
     }
 
     @Override
-    public synchronized Set<Configuration> fireOneTransition(Configuration source, FireableTransition toFire) {
-        Set<Configuration> configurations = new HashSet<>();
+    public synchronized Collection<Configuration> fireOneTransition(Configuration source, FireableTransition toFire) {
+        List<Configuration> configurations = new LinkedList<>();
         try {
             //send request
             RequestKind.REQ_FIRE_TRANSITION.writeOn(outputStream);

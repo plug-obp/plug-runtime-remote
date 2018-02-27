@@ -2,6 +2,7 @@ package plug.language.remote.runtime;
 
 import announce4j.Announcer;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Set;
 import plug.core.IAtomicPropositionsEvaluator;
@@ -67,8 +68,8 @@ public class RemoteRuntime implements ILanguageRuntime<Configuration, FireableTr
 
     @Override
     public synchronized IFiredTransition<Configuration, ?> fireOneTransition(Configuration source, FireableTransition transition) {
-        Set<Configuration> target = driver.fireOneTransition(source, transition);
-         return new FiredTransition<>(source, target, transition);
+        Collection<Configuration> target = driver.fireOneTransition(source, transition);
+        return new FiredTransition<>(source, new ArrayList<>(target), transition);
     }
 
     @Override

@@ -16,7 +16,7 @@ public abstract class AbstractDriver {
     public abstract void disconnect();
     public abstract Set<Configuration> initialConfigurations();
     public abstract Collection<FireableTransition> fireableTransitionsFrom(Configuration configuration);
-    public abstract Set<Configuration> fireOneTransition(Configuration source, FireableTransition toFire);
+    public abstract Collection<Configuration> fireOneTransition(Configuration source, FireableTransition toFire);
 
     public abstract int[] registerAtomicPropositions(String[] atomicPropositions);
     public abstract boolean[] getAtomicPropositionValuations(Configuration source);
