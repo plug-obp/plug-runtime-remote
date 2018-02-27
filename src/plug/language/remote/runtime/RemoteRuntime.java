@@ -1,6 +1,5 @@
 package plug.language.remote.runtime;
 
-import announce4j.Announcer;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -8,7 +7,6 @@ import java.util.Set;
 import plug.core.IAtomicPropositionsEvaluator;
 import plug.core.IFiredTransition;
 import plug.core.ILanguageRuntime;
-import plug.events.ExecutionEndedEvent;
 import plug.language.remote.driver.TCPDriver;
 import plug.statespace.transitions.FiredTransition;
 
@@ -73,14 +71,12 @@ public class RemoteRuntime implements ILanguageRuntime<Configuration, FireableTr
     }
 
     @Override
-    public void setAnnouncer(Announcer announcer) {
-        announcer.when(ExecutionEndedEvent.class, (sender, event) -> {
-            driver.disconnect();
-        });
+    public IAtomicPropositionsEvaluator getAtomicPropositionEvaluator() {
+        return atomicPropositionsEvaluator;
     }
 
     @Override
-    public IAtomicPropositionsEvaluator getAtomicPropositionEvaluator() {
-        return atomicPropositionsEvaluator;
+    public void close() {
+        driver.disconnect();
     }
 }
