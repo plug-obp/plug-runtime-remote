@@ -1,6 +1,7 @@
 package plug.language.remote;
 
 import java.util.List;
+import java.util.Objects;
 import plug.core.ILanguageRuntime;
 import plug.core.IRuntimeView;
 import plug.core.view.ConfigurationItem;
@@ -34,4 +35,12 @@ public class RemoteRuntimeView implements IRuntimeView<Configuration, FireableTr
     	return runtime.getDriver().getFireableTransitionDescription(transition);
 	}
 
+	@Override
+	public String getActionDescription(Object action) {
+    	if (action instanceof FireableTransition) {
+			return getFireableTransitionDescription((FireableTransition) action);
+		} else {
+    		return Objects.toString(action);
+		}
+	}
 }
