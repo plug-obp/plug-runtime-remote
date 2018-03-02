@@ -1,21 +1,16 @@
 package plug.language.remote.runtime;
 
-import plug.core.defaults.DefaultConfiguration;
-
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Arrays;
+import plug.core.defaults.DefaultConfiguration;
 
 /**
  * Class for configuration of the model.
  * @author valentin
  */
 public class Configuration extends DefaultConfiguration<Configuration> {
-	public byte[] state;
-
-	public Configuration() {
-
-	}
+	public final byte[] state;
 
 	public Configuration(byte[] data) {
 		this.state = data;
@@ -23,10 +18,7 @@ public class Configuration extends DefaultConfiguration<Configuration> {
 
 	@Override
 	public Configuration createCopy() {
-		Configuration newC = new Configuration();
-
-		newC.state = Arrays.copyOf(state, state.length);
-		return newC;
+		return new Configuration(Arrays.copyOf(state, state.length));
 	}
 
 	@Override
