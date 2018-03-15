@@ -67,7 +67,7 @@ public class RemoteRuntime implements ILanguageRuntime<Configuration, FireableTr
     @Override
     public synchronized IFiredTransition<Configuration, ?> fireOneTransition(Configuration source, FireableTransition transition) {
         Collection<Configuration> target = driver.fireOneTransition(source, transition);
-        return new FiredTransition<>(source, new ArrayList<>(target), transition);
+        return new FiredTransition<>(source, target, transition);
     }
 
     @Override
