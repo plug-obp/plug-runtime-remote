@@ -2,14 +2,14 @@ package plug.language.remote;
 
 import java.util.LinkedList;
 import java.util.Random;
-import plug.core.ILanguageModule;
+import plug.core.ILanguagePlugin;
 import plug.core.IRuntimeView;
 import plug.language.remote.runtime.RemoteRuntime;
 
 /**
  * Created by Ciprian TEODOROV on 02/03/17.
  */
-public class RemoteModule implements ILanguageModule<RemoteRuntime> {
+public class RemotePlugin implements ILanguagePlugin<RemoteRuntime> {
     RemoteLoader loader = new RemoteLoader();
 
     @Override

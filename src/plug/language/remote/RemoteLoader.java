@@ -20,7 +20,7 @@ public class RemoteLoader implements ILanguageLoader<RemoteRuntime> {
 			int port = description.getPort();
 			if (port <= 0) {
 				// select a random port
-				port = RemoteModule.newPort();
+				port = RemotePlugin.newPort();
 			}
 
 
