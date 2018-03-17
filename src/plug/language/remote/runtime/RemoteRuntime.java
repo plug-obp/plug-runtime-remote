@@ -1,12 +1,11 @@
 package plug.language.remote.runtime;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Set;
 import plug.core.IAtomicPropositionsEvaluator;
 import plug.core.IFiredTransition;
-import plug.core.ILanguageRuntime;
+import plug.core.ITransitionRelation;
 import plug.language.remote.driver.TCPDriver;
 import plug.statespace.transitions.FiredTransition;
 
@@ -15,7 +14,7 @@ import plug.statespace.transitions.FiredTransition;
  *
  * @author Valentin Besnard & Ciprian Teodorov
  */
-public class RemoteRuntime implements ILanguageRuntime<Configuration, FireableTransition> {
+public class RemoteRuntime implements ITransitionRelation<Configuration, FireableTransition> {
 
     /**
      * The instance of the driver

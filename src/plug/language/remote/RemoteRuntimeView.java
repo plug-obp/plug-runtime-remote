@@ -2,7 +2,7 @@ package plug.language.remote;
 
 import java.util.List;
 import java.util.Objects;
-import plug.core.ILanguageRuntime;
+import plug.core.ITransitionRelation;
 import plug.core.IRuntimeView;
 import plug.core.view.ConfigurationItem;
 import plug.language.remote.runtime.Configuration;
@@ -21,7 +21,7 @@ public class RemoteRuntimeView implements IRuntimeView<Configuration, FireableTr
     }
 
 	@Override
-	public ILanguageRuntime<Configuration, FireableTransition> getRuntime() {
+	public ITransitionRelation<Configuration, FireableTransition> getRuntime() {
     	return runtime;
 	}
 
