@@ -5,7 +5,6 @@ import plug.language.remote.driver.TCPDriver;
 
 public class RemoteAtomicPropositionsEvaluator implements IAtomicPropositionsEvaluator<Configuration, FireableTransition> {
 
-
 	protected final TCPDriver driver;
 
 	public RemoteAtomicPropositionsEvaluator(TCPDriver driver) {
@@ -13,7 +12,7 @@ public class RemoteAtomicPropositionsEvaluator implements IAtomicPropositionsEva
 	}
 
 	@Override
-	public int[] registerAtomicPropositions(String[] atomicPropositions) {
+	public int[] registerAtomicPropositions(String[] atomicPropositions) throws Exception {
 		return driver.registerAtomicPropositions(atomicPropositions);
 	}
 

@@ -18,7 +18,7 @@ public abstract class AbstractDriver {
     public abstract Collection<FireableTransition> fireableTransitionsFrom(Configuration configuration);
     public abstract Collection<Configuration> fireOneTransition(Configuration source, FireableTransition toFire);
 
-    public abstract int[] registerAtomicPropositions(String[] atomicPropositions);
+    public abstract int[] registerAtomicPropositions(String[] atomicPropositions) throws Exception;
     public abstract boolean[] getAtomicPropositionValuations(Configuration source);
 
 

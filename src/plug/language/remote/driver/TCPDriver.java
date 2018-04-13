@@ -167,37 +167,32 @@ public class TCPDriver extends AbstractDriver {
         return configurations;
     }
 
-    public synchronized int[] registerAtomicPropositions(String[] atomicPropositions) {
-        try {
-            //send request
-            RequestKind.REQ_REGISTER_ATOMIC_PROPOSITIONS.writeOn(outputStream);
-            ByteBuffer data = ByteBuffer.allocate(4).order(ByteOrder.LITTLE_ENDIAN);
-            data.putInt(atomicPropositions.length);
+    public synchronized int[] registerAtomicPropositions(String[] atomicPropositions) throws IOException {
+        //send request
+        RequestKind.REQ_REGISTER_ATOMIC_PROPOSITIONS.writeOn(outputStream);
+        ByteBuffer data = ByteBuffer.allocate(4).order(ByteOrder.LITTLE_ENDIAN);
+        data.putInt(atomicPropositions.length);
+        outputStream.write(data.array());
+
+        for (String atomicProposition : atomicPropositions) {
+            byte[] bytes = atomicProposition.getBytes(StandardCharsets.UTF_8);
+
+            data = ByteBuffer.allocate(4).order(ByteOrder.LITTLE_ENDIAN);
+            data.putInt(bytes.length);
             outputStream.write(data.array());
 
-            for (String atomicProposition : atomicPropositions) {
-                byte[] bytes = atomicProposition.getBytes(StandardCharsets.UTF_8);
-
-                data = ByteBuffer.allocate(4).order(ByteOrder.LITTLE_ENDIAN);
-                data.putInt(bytes.length);
-                outputStream.write(data.array());
-
-                outputStream.write(bytes);
-            }
-
-            outputStream.flush();
-
-            // reads the registered indexes
-            int size = readInt(4);
-            int[] result = new int[size];
-            for (int i = 0; i < size; i++) {
-                result[i] = readInt(4);
-            }
-            return result;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return new int[]{};
+            outputStream.write(bytes);
         }
+
+        outputStream.flush();
+
+        // reads the registered indexes
+        int size = readInt(4);
+        int[] result = new int[size];
+        for (int i = 0; i < size; i++) {
+            result[i] = readInt(4);
+        }
+        return result;
     }
 
     public synchronized boolean[] getAtomicPropositionValuations(Configuration target) {
