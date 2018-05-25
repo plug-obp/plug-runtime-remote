@@ -41,16 +41,10 @@ public class RemoteRuntime implements ITransitionRelation<Configuration, Fireabl
     /**
      * Initialize the runtime (here nothing to do).
      *
-     * @return true if initialized.
+     * @throws IOException when connection failed
      */
-    public boolean initializeRuntime() {
-        try {
-            driver.connect();
-            return true;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
-        }
+    public void initializeRuntime() throws IOException {
+        driver.connect();
     }
 
     @Override
