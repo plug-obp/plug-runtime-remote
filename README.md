@@ -55,3 +55,12 @@ The `atom` is a 'utf-8` encoded string.
 Sends `15[configuration_size:source_configuration_id]` 
 and waits for 
 `[value_count][value:1]{value_count}`
+
+
+**Configuration items**
+
+Sends `110[configuration_size:configuration]` and waits for `[4:item_cout]([type][name][icon][item children]){item_count}`
+
+**Fireable transition description**
+
+Sends `111[transition_size:transition]` and waits for `[text]`
