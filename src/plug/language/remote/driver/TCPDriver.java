@@ -85,6 +85,11 @@ public class TCPDriver extends AbstractDriver {
 		return ByteBuffer.wrap(readData(size)).order(ByteOrder.LITTLE_ENDIAN).getInt();
 	}
 
+	private void writeInt(int value) throws IOException {
+        ByteBuffer bb = ByteBuffer.allocate(4).order(ByteOrder.LITTLE_ENDIAN).putInt(value);
+        outputStream.write(bb.array());
+    }
+
 	private String readString() throws IOException {
         int size = readInt(4);
         return size < 0 ? null : new String(readData(size), StandardCharsets.UTF_8);
@@ -101,11 +106,11 @@ public class TCPDriver extends AbstractDriver {
 
             //read number of configurations
             int numConfigurations = readInt(4);
-            //read the configuration size
-            int configurationSize = readInt(8);
 
             //read number of configurations
             for (int i = 0; i<numConfigurations;i++) {
+                //read the configuration size
+                int configurationSize = readInt(4);
                 configurations.add(new Configuration(readData(configurationSize)));
             }
         } catch (IOException e) {
@@ -122,13 +127,14 @@ public class TCPDriver extends AbstractDriver {
         try {
             //send request
             RequestKind.REQ_FIREABLE_TRANSITIONS_FROM.writeOn(outputStream);
+            writeInt(configuration.state.length);
             configuration.writeOn(outputStream);
             outputStream.flush();
 
             //read number of transitions
             int numTransitions = readInt(4);
             //read the transitions size
-            int transitionSize = readInt(8);
+            int transitionSize = readInt(4);
 
             //read number of transitions
             for (int i = 0; i<numTransitions;i++) {
@@ -147,17 +153,18 @@ public class TCPDriver extends AbstractDriver {
         try {
             //send request
             RequestKind.REQ_FIRE_TRANSITION.writeOn(outputStream);
+            writeInt(source.state.length);
             source.writeOn(outputStream);
             toFire.writeOn(outputStream);
             outputStream.flush();
 
             //read number of configurations
             int numConfigurations = readInt(4);
-            //read the configuration size
-            int configurationSize = readInt(8);
 
             //read number of configurations
             for (int i = 0; i<numConfigurations;i++) {
+                //read the configuration size
+                int configurationSize = readInt(4);
                 configurations.add(new Configuration(readData(configurationSize)));
             }
 
@@ -199,6 +206,7 @@ public class TCPDriver extends AbstractDriver {
         try {
             //send request
             RequestKind.REQ_ATOMIC_PROPOSITION_VALUATIONS.writeOn(outputStream);
+            writeInt(target.state.length);
             target.writeOn(outputStream);
             outputStream.flush();
 
@@ -236,6 +244,7 @@ public class TCPDriver extends AbstractDriver {
     public synchronized List<ConfigurationItem> getConfigurationItems(Configuration value) {
     	try {
 			RequestKind.REQ_CONFIGURATION_ITEMS.writeOn(outputStream);
+            writeInt(value.state.length);
 			value.writeOn(outputStream);
 			outputStream.flush();
 

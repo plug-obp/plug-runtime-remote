@@ -23,7 +23,7 @@ public class Main
      */
     public static final void main(String[] arg) throws IOException
     {
-        RemoteRuntime runtime = new RemoteRuntime("localhost", 1234);
+        RemoteRuntime runtime = new RemoteRuntime("localhost", 12345);
         runtime.initializeRuntime();
 
         IStateSpaceManager<Configuration, FireableTransition> stateSpaceManager = new SimpleStateSpaceManager<>();
