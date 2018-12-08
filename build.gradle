@@ -4,14 +4,14 @@ buildscript {
 		maven { url "https://dl.bintray.com/plug-obp/maven" }
 	}
 	dependencies {
-		classpath group: 'fr.ensta-bretagne', name: 'plug-plugin', version: '+'
+		classpath group: 'fr.ensta-bretagne', name: 'plug-plugin', version: '0.6'
 	}
 }
 
 apply plugin: 'plug.plugin'
 
 dependencies {
-	compile group: 'io.github.teodorov', name: 'announce4j', version: '+'
+	compile group: 'io.github.teodorov', name: 'announce4j', version: 'master'
 	compile group: 'fr.ensta-bretagne', name: 'plug-core', version: plug.version
 	compile group: 'fr.ensta-bretagne', name: 'plug-utils', version: plug.version
 
