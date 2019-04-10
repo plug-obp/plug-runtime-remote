@@ -7,10 +7,16 @@ import java.io.OutputStream;
  * Class for a fireable transition of the model.
  * @author valentin
  */
-public class FireableTransition extends DataCapsule
+public class FireableTransition
 {
 
+	public final byte data[];
+
 	public FireableTransition(byte[] data) {
-		super(data);
+		this.data = data;
+	}
+
+	public void writeOn(OutputStream os) throws IOException {
+		os.write(data);
 	}
 }
