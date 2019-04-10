@@ -130,11 +130,12 @@ public class TCPDriver extends AbstractDriver {
 
             //read number of transitions
             int numTransitions = readInt(4);
-            //read the transitions size
-            int transitionSize = readInt(4);
 
             //read number of transitions
             for (int i = 0; i<numTransitions;i++) {
+                //read the transitions size
+                int transitionSize = readInt(4);
+                //read the transition
                 fireableTransitions.add(new FireableTransition(readData(transitionSize)));
             }
         } catch (IOException e) {
@@ -152,8 +153,10 @@ public class TCPDriver extends AbstractDriver {
         try {
             //send request
             RequestKind.REQ_FIRE_TRANSITION.writeOn(outputStream);
+            //send source
             writeInt(source.state.length);
             source.writeOn(outputStream);
+            //sent fireable
             writeInt(toFire.data.length);
             toFire.writeOn(outputStream);
             outputStream.flush();
@@ -168,7 +171,6 @@ public class TCPDriver extends AbstractDriver {
                 configurations.add(new Configuration(readData(configurationSize)));
             }
 
-            //TODO: read the payload
             //read payload size
             int payloadSize = readInt(4);
             //read size data
@@ -242,6 +244,7 @@ public class TCPDriver extends AbstractDriver {
             writeInt(source.state.length);
             source.writeOn(outputStream);
             //send the fireable
+            writeInt(fireable.data.length);
             fireable.writeOn(outputStream);
             //send the payload
             byte[] thePayload = (byte[]) payload;
@@ -305,6 +308,7 @@ public class TCPDriver extends AbstractDriver {
     public synchronized String getFireableTransitionDescription(FireableTransition transition) {
         try {
             RequestKind.REQ_FIREABLE_TRANSITION_DESCRIPTION.writeOn(outputStream);
+            writeInt(transition.data.length);
             transition.writeOn(outputStream);
             outputStream.flush();
 

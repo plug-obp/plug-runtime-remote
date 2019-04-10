@@ -46,8 +46,8 @@ Sends
 and waits for 
 ```
 [4:transitions_count]
-[4:transition_size]
 (
+    [4:transition_size]
     [transition_size:transition]
 ){transitions_count}
 ```
@@ -65,10 +65,10 @@ Sends
 and waits for 
 ```
 [4:configurations_count]
- (
-    [4:configuration_size]
-    [configuration_size:configuration]
- ){configurations_count} 
+(
+   [4:configuration_size]
+   [configuration_size:configuration]
+){configurations_count} 
 [4:payload_size]
 [payload_size:payload]
 ```
@@ -84,9 +84,15 @@ Sends
     [atom:atom_size]
 ){atoms_count}
 ```
-and no return is expected.
+and waits for
+```
+[4:idx_count]
+(
+    [4:idx]
+){idx_count}
+```
 
-The `atom` is a 'utf-8` encoded string.
+The `atom` is a `UTF-8` encoded string.
 
 **Atomic proposition valuations**
 
@@ -166,4 +172,4 @@ and waits for
     [1:byte]
 ){text_length}
 ```
-The resulting byte array is interpreted as UTF-8 
+The resulting byte array is interpreted as `UTF-8`
