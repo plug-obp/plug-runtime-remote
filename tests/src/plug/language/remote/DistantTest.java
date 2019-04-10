@@ -88,16 +88,6 @@ public class DistantTest {
 	protected static IRuntimeSerializer getSerializer() {
 		return new IRuntimeSerializer<NumberConfiguration, Integer>() {
 			@Override
-			public int getConfigurationSize() {
-				return 4;
-			}
-
-			@Override
-			public int getTransitionSize() {
-				return 4;
-			}
-
-			@Override
 			public byte[] serializeConfiguration(NumberConfiguration configuration) {
 				return ByteBuffer.allocate(4).putInt(configuration.count).array();
 			}
@@ -115,6 +105,16 @@ public class DistantTest {
 			@Override
 			public Integer deserializeTransition(byte[] bytes) {
 				return ByteBuffer.wrap(bytes).getInt();
+			}
+
+			@Override
+			public byte[] serializePayload(Object payload) {
+				return new byte[] {1};
+			}
+
+			@Override
+			public Object deserializePayload(byte[] bytes) {
+				return 1;
 			}
 		};
 	}

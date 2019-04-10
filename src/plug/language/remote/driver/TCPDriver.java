@@ -6,6 +6,8 @@ import plug.language.remote.protocol.RequestKind;
 import plug.language.remote.runtime.Configuration;
 import plug.language.remote.runtime.FireableTransition;
 import plug.statespace.transitions.FiredTransition;
+import plug.utils.marshaling.Marshaller;
+import plug.utils.marshaling.Unmarshaller;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -70,25 +72,9 @@ public class TCPDriver extends AbstractDriver {
         }
     }
 
-    private byte[] readData(int size) throws IOException {
-        byte[] data = new byte[size];
-        int read = 0;
-        do { read += inputStream.read(data, 0, size); } while (read < size);
-        return data;
-    }
-
-    private int readInt(int size) throws IOException {
-		return ByteBuffer.wrap(readData(size)).order(ByteOrder.LITTLE_ENDIAN).getInt();
-	}
-
-	private void writeInt(int value) throws IOException {
-        ByteBuffer bb = ByteBuffer.allocate(4).order(ByteOrder.LITTLE_ENDIAN).putInt(value);
-        outputStream.write(bb.array());
-    }
-
 	private String readString() throws IOException {
-        int size = readInt(4);
-        return size < 0 ? null : new String(readData(size), StandardCharsets.UTF_8);
+        int size = Unmarshaller.readInt(inputStream);
+        return size < 0 ? null : new String(Unmarshaller.readData(size, inputStream), StandardCharsets.UTF_8);
 	}
 
 	@SuppressWarnings("Duplicates")
@@ -102,13 +88,13 @@ public class TCPDriver extends AbstractDriver {
             outputStream.flush();
 
             //read number of configurations
-            int numConfigurations = readInt(4);
+            int numConfigurations = Unmarshaller.readInt(inputStream);
 
             //read number of configurations
             for (int i = 0; i<numConfigurations;i++) {
                 //read the configuration size
-                int configurationSize = readInt(4);
-                configurations.add(new Configuration(readData(configurationSize)));
+                int configurationSize = Unmarshaller.readInt(inputStream);
+                configurations.add(new Configuration(Unmarshaller.readData(configurationSize, inputStream)));
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -124,19 +110,19 @@ public class TCPDriver extends AbstractDriver {
         try {
             //send request
             RequestKind.REQ_FIREABLE_TRANSITIONS_FROM.writeOn(outputStream);
-            writeInt(configuration.state.length);
+            Marshaller.writeInt(configuration.state.length, outputStream);
             configuration.writeOn(outputStream);
             outputStream.flush();
 
             //read number of transitions
-            int numTransitions = readInt(4);
+            int numTransitions = Unmarshaller.readInt(inputStream);
 
             //read number of transitions
             for (int i = 0; i<numTransitions;i++) {
                 //read the transitions size
-                int transitionSize = readInt(4);
+                int transitionSize = Unmarshaller.readInt(inputStream);
                 //read the transition
-                fireableTransitions.add(new FireableTransition(readData(transitionSize)));
+                fireableTransitions.add(new FireableTransition(Unmarshaller.readData(transitionSize, inputStream)));
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -154,27 +140,27 @@ public class TCPDriver extends AbstractDriver {
             //send request
             RequestKind.REQ_FIRE_TRANSITION.writeOn(outputStream);
             //send source
-            writeInt(source.state.length);
+            Marshaller.writeInt(source.state.length, outputStream);
             source.writeOn(outputStream);
             //sent fireable
-            writeInt(toFire.data.length);
+            Marshaller.writeInt(toFire.data.length, outputStream);
             toFire.writeOn(outputStream);
             outputStream.flush();
 
             //read number of configurations
-            int numConfigurations = readInt(4);
+            int numConfigurations = Unmarshaller.readInt(inputStream);
 
             //read number of configurations
             for (int i = 0; i<numConfigurations;i++) {
                 //read the configuration size
-                int configurationSize = readInt(4);
-                configurations.add(new Configuration(readData(configurationSize)));
+                int configurationSize = Unmarshaller.readInt(inputStream);
+                configurations.add(new Configuration(Unmarshaller.readData(configurationSize, inputStream)));
             }
 
             //read payload size
-            int payloadSize = readInt(4);
+            int payloadSize = Unmarshaller.readInt(inputStream);
             //read size data
-            payload = readData(payloadSize);
+            payload = Unmarshaller.readData(payloadSize, inputStream);
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -202,10 +188,10 @@ public class TCPDriver extends AbstractDriver {
         outputStream.flush();
 
         // reads the registered indexes
-        int size = readInt(4);
+        int size = Unmarshaller.readInt(inputStream);
         int[] result = new int[size];
         for (int i = 0; i < size; i++) {
-            result[i] = readInt(4);
+            result[i] = Unmarshaller.readInt(inputStream);
         }
         return result;
     }
@@ -215,13 +201,13 @@ public class TCPDriver extends AbstractDriver {
         try {
             //send request
             RequestKind.REQ_ATOMIC_PROPOSITION_VALUATIONS.writeOn(outputStream);
-            writeInt(configuration.state.length);
+            Marshaller.writeInt(configuration.state.length, outputStream);
             configuration.writeOn(outputStream);
             outputStream.flush();
 
             //read number of values
-			int valueCount = readInt(4);
-            byte[] rawValues = readData(valueCount);
+			int valueCount = Unmarshaller.readInt(inputStream);
+            byte[] rawValues = Unmarshaller.readData(valueCount, inputStream);
 
             boolean[] values = new boolean[valueCount];
             for (int i = 0; i < valueCount; i++) {
@@ -241,22 +227,22 @@ public class TCPDriver extends AbstractDriver {
             //send request
             RequestKind.REQ_EXTENDED_ATOMIC_PROPOSITION_VALUATIONS.writeOn(outputStream);
             //send source
-            writeInt(source.state.length);
+            Marshaller.writeInt(source.state.length, outputStream);
             source.writeOn(outputStream);
             //send the fireable
-            writeInt(fireable.data.length);
+            Marshaller.writeInt(fireable.data.length, outputStream);
             fireable.writeOn(outputStream);
             //send the payload
             byte[] thePayload = (byte[]) payload;
-            writeInt(thePayload.length);
+            Marshaller.writeInt(thePayload.length, outputStream);
             outputStream.write(thePayload);
             //send the target
-            writeInt(target.state.length);
+            Marshaller.writeInt(target.state.length, outputStream);
             target.writeOn(outputStream);
 
             //read number of values
-            int valueCount = readInt(4);
-            byte[] rawValues = readData(valueCount);
+            int valueCount = Unmarshaller.readInt(inputStream);
+            byte[] rawValues = Unmarshaller.readData(valueCount, inputStream);
 
             boolean[] values = new boolean[valueCount];
             for (int i = 0; i < valueCount; i++) {
@@ -276,7 +262,7 @@ public class TCPDriver extends AbstractDriver {
 		String icon = readString();
 
 		List<ConfigurationItem> children = new ArrayList<>();
-		int childrenCount = readInt(4);
+		int childrenCount = Unmarshaller.readInt(inputStream);
         for (int i = 0; i < childrenCount; i++) {
             children.add(readConfigurationItem());
         }
@@ -288,13 +274,13 @@ public class TCPDriver extends AbstractDriver {
     public synchronized List<ConfigurationItem> getConfigurationItems(Configuration value) {
     	try {
 			RequestKind.REQ_CONFIGURATION_ITEMS.writeOn(outputStream);
-            writeInt(value.state.length);
+            Marshaller.writeInt(value.state.length, outputStream);
 			value.writeOn(outputStream);
 			outputStream.flush();
 
 			//read result
             List<ConfigurationItem> items = new ArrayList<>();
-            int itemsCount = readInt(4);
+            int itemsCount = Unmarshaller.readInt(inputStream);
             for (int i = 0; i < itemsCount; i++) {
                 items.add(readConfigurationItem());
             }
@@ -308,7 +294,7 @@ public class TCPDriver extends AbstractDriver {
     public synchronized String getFireableTransitionDescription(FireableTransition transition) {
         try {
             RequestKind.REQ_FIREABLE_TRANSITION_DESCRIPTION.writeOn(outputStream);
-            writeInt(transition.data.length);
+            Marshaller.writeInt(transition.data.length, outputStream);
             transition.writeOn(outputStream);
             outputStream.flush();
 

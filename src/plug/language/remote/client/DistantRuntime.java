@@ -16,6 +16,8 @@ import plug.core.IFiredTransition;
 import plug.core.ITransitionRelation;
 import plug.core.RuntimeDescription;
 import plug.core.view.ConfigurationItem;
+import plug.utils.marshaling.Marshaller;
+import plug.utils.marshaling.Unmarshaller;
 
 public class DistantRuntime {
 
@@ -76,33 +78,13 @@ public class DistantRuntime {
 		runtime = description.getRuntime();
 	}
 
-	private byte[] readData(int size) throws IOException {
-		byte[] data = new byte[size];
-		int read = 0;
-		do { read += inputStream.read(data, 0, size); } while (read < size);
-		return data;
-	}
-
-	private int readInt() throws IOException {
-		return ByteBuffer.wrap(readData(4)).order(ByteOrder.LITTLE_ENDIAN).getInt();
-	}
-
-	private long readLong() throws IOException {
-		return ByteBuffer.wrap(readData(8)).order(ByteOrder.LITTLE_ENDIAN).getLong();
-	}
-
-	private String readString() throws IOException {
-		int size = readInt();
-		return size < 0 ? null : new String(readData(size), StandardCharsets.UTF_8);
-	}
-
 	private ConfigurationItem readConfigurationItem() throws IOException {
-		String type = readString();
-		String name = readString();
-		String icon = readString();
+		String type = Unmarshaller.readString(inputStream);
+		String name = Unmarshaller.readString(inputStream);
+		String icon = Unmarshaller.readString(inputStream);
 
 		List<ConfigurationItem> children = new ArrayList<>();
-		int childrenCount = readInt();
+		int childrenCount = Unmarshaller.readInt(inputStream);
 		for (int i = 0; i < childrenCount; i++) {
 			children.add(readConfigurationItem());
 		}
@@ -110,60 +92,34 @@ public class DistantRuntime {
 		return new ConfigurationItem(type, name, icon, children);
 	}
 
-	private void writeData(byte[] data) throws IOException {
-		if (data != null) {
-			outputStream.write(data);
-		}
-	}
-
-	private void writeInt(int value) throws IOException {
-		ByteBuffer buffer = ByteBuffer.allocate(4).order(ByteOrder.LITTLE_ENDIAN);
-		buffer.putInt(value);
-		writeData(buffer.array());
-	}
-
-	private void writeLong(long value) throws IOException {
-		ByteBuffer buffer = ByteBuffer.allocate(8).order(ByteOrder.LITTLE_ENDIAN);
-		buffer.putLong(value);
-		writeData(buffer.array());
-	}
-
-	private void writeString(String value) throws IOException {
-		byte[] bytes = value != null ? value.getBytes(StandardCharsets.UTF_8) : null;
-		if (bytes != null) {
-			writeInt(bytes.length);
-			writeData(bytes);
-		} else {
-			writeInt(0);
-		}
-	}
-
 	private void writeConfigurationItem(ConfigurationItem item) throws IOException {
-		writeString(item.getType());
-		writeString(item.getName());
-		writeString(item.getIcon());
+		Marshaller.writeString(item.getType(), outputStream);
+		Marshaller.writeString(item.getName(), outputStream);
+		Marshaller.writeString(item.getIcon(), outputStream);
 
-		writeInt(item.getChildren().size());
+		Marshaller.writeInt(item.getChildren().size(), outputStream);
 		for (ConfigurationItem child : item.getChildren()) {
 			writeConfigurationItem(child);
 		}
 	}
 
 	public void sendConfigurations(Collection<IConfiguration> configurations) throws IOException {
-		writeInt(configurations.size());
-		writeLong(serializer.getConfigurationSize());
+		Marshaller.writeInt(configurations.size(), outputStream);
 
 		for (IConfiguration configuration : configurations) {
-			writeData(serializer.serializeConfiguration(configuration));
+			byte[] bytes = serializer.serializeConfiguration(configuration);
+			Marshaller.writeInt(bytes.length, outputStream);
+			Marshaller.write(bytes, outputStream);
 		}
 	}
 
 	public void sendTransitions(Collection<Object> transitions) throws IOException {
-		writeInt(transitions.size());
-		writeLong(serializer.getTransitionSize());
+		Marshaller.writeInt(transitions.size(), outputStream);
 
 		for (Object transition : transitions) {
-			writeData(serializer.serializeTransition(transition));
+			byte[] bytes = serializer.serializeTransition(transition);
+			Marshaller.writeInt(bytes.length, outputStream);
+			Marshaller.write(bytes, outputStream);
 		}
 	}
 
@@ -173,21 +129,37 @@ public class DistantRuntime {
 	}
 
 	public void handleFireableTransitions() throws IOException {
-		byte[] buffer = readData(serializer.getConfigurationSize());
+		//read configuration size
+		int configurationSize = Unmarshaller.readInt(inputStream);
+		//read configuration
+		byte[] buffer = Unmarshaller.readData(configurationSize, inputStream);
 		IConfiguration configuration = serializer.deserializeConfiguration(buffer);
+
+		//send transitions
 		sendTransitions(runtime.fireableTransitionsFrom(configuration));
 		outputStream.flush();
 	}
 
 	public void handleFireTransition() throws IOException {
-		byte[] configurationBuffer = readData(serializer.getConfigurationSize());
-		IConfiguration configuration = serializer.deserializeConfiguration(configurationBuffer);
+		//read configuration size
+		int configurationSize = Unmarshaller.readInt(inputStream);
+		//read configuration
+		byte[] buffer = Unmarshaller.readData(configurationSize, inputStream);
+		IConfiguration configuration = serializer.deserializeConfiguration(buffer);
 
-		byte[] transitionBuffer = readData(serializer.getTransitionSize());
+		//read transition size
+		int transitionSize = Unmarshaller.readInt(inputStream);
+		//read transition
+		byte[] transitionBuffer = Unmarshaller.readData(transitionSize, inputStream);
 		Object transition = serializer.deserializeTransition(transitionBuffer);
 
 		IFiredTransition<IConfiguration, ?> fired = runtime.fireOneTransition(configuration, transition);
 		sendConfigurations(fired.getTargets());
+
+		byte[] payload = serializer.serializePayload(fired.getPayload());
+		Marshaller.writeInt(payload.length, outputStream);
+		Marshaller.write(payload, outputStream);
+
 		outputStream.flush();
 	}
 
@@ -209,21 +181,20 @@ public class DistantRuntime {
 					break;
 
 				case 4: // Register atomic propositions
+					//TODO:
 					break;
 
-				case 5: // Atomic proposition valuations
+				case 5: // Atomic propositions valuations
+					//TODO:
 					break;
+				case 6: // Extended atomic propositions valuations
 
 				case 10: // Configuration items
-					readData(serializer.getConfigurationSize());
-					writeInt(0);
-					outputStream.flush();
+					//TODO:
 					break;
 
 				case 11: // Fireable transition description
-					Object transition = serializer.deserializeTransition(readData(serializer.getTransitionSize()));
-					writeString(transition.toString());
-					outputStream.flush();
+					//TODO:
 					break;
 			}
 			return true;
