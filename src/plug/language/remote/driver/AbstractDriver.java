@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+
+import plug.core.IFiredTransition;
 import plug.core.view.ConfigurationItem;
 import plug.language.remote.runtime.Configuration;
 import plug.language.remote.runtime.FireableTransition;
@@ -16,10 +18,11 @@ public abstract class AbstractDriver {
     public abstract void disconnect();
     public abstract Set<Configuration> initialConfigurations();
     public abstract Collection<FireableTransition> fireableTransitionsFrom(Configuration configuration);
-    public abstract Collection<Configuration> fireOneTransition(Configuration source, FireableTransition toFire);
+    public abstract IFiredTransition<Configuration, FireableTransition> fireOneTransition(Configuration source, FireableTransition toFire);
 
     public abstract int[] registerAtomicPropositions(String[] atomicPropositions) throws Exception;
     public abstract boolean[] getAtomicPropositionValuations(Configuration source);
+    public abstract boolean[] getAtomicPropositionValuations(Configuration source, FireableTransition fireable, Object payload, Configuration target);
 
 
     public abstract List<ConfigurationItem> getConfigurationItems(Configuration value);

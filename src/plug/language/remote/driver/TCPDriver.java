@@ -1,5 +1,12 @@
 package plug.language.remote.driver;
 
+import plug.core.IFiredTransition;
+import plug.core.view.ConfigurationItem;
+import plug.language.remote.protocol.RequestKind;
+import plug.language.remote.runtime.Configuration;
+import plug.language.remote.runtime.FireableTransition;
+import plug.statespace.transitions.FiredTransition;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
@@ -8,18 +15,7 @@ import java.net.Socket;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
-import plug.core.view.ConfigurationItem;
-import plug.language.remote.protocol.RequestKind;
-import plug.language.remote.runtime.Configuration;
-import plug.language.remote.runtime.FireableTransition;
+import java.util.*;
 
 /**
  * Created by Ciprian TEODOROV on 08/09/17.
@@ -95,6 +91,7 @@ public class TCPDriver extends AbstractDriver {
         return size < 0 ? null : new String(readData(size), StandardCharsets.UTF_8);
 	}
 
+	@SuppressWarnings("Duplicates")
     @Override
     public synchronized Set<Configuration> initialConfigurations() {
         Set<Configuration> configurations = new HashSet<>();
@@ -147,14 +144,17 @@ public class TCPDriver extends AbstractDriver {
         return fireableTransitions;
     }
 
+    @SuppressWarnings("Duplicates")
     @Override
-    public synchronized Collection<Configuration> fireOneTransition(Configuration source, FireableTransition toFire) {
+    public synchronized IFiredTransition<Configuration, FireableTransition> fireOneTransition(Configuration source, FireableTransition toFire) {
         List<Configuration> configurations = new LinkedList<>();
+        byte payload[] = new byte[0];
         try {
             //send request
             RequestKind.REQ_FIRE_TRANSITION.writeOn(outputStream);
             writeInt(source.state.length);
             source.writeOn(outputStream);
+            writeInt(toFire.data.length);
             toFire.writeOn(outputStream);
             outputStream.flush();
 
@@ -168,10 +168,16 @@ public class TCPDriver extends AbstractDriver {
                 configurations.add(new Configuration(readData(configurationSize)));
             }
 
+            //TODO: read the payload
+            //read payload size
+            int payloadSize = readInt(4);
+            //read size data
+            payload = readData(payloadSize);
+
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return configurations;
+        return new FiredTransition<>(source, configurations, toFire, payload);
     }
 
     public synchronized int[] registerAtomicPropositions(String[] atomicPropositions) throws IOException {
@@ -202,12 +208,13 @@ public class TCPDriver extends AbstractDriver {
         return result;
     }
 
-    public synchronized boolean[] getAtomicPropositionValuations(Configuration target) {
+    @SuppressWarnings("Duplicates")
+    public synchronized boolean[] getAtomicPropositionValuations(Configuration configuration) {
         try {
             //send request
             RequestKind.REQ_ATOMIC_PROPOSITION_VALUATIONS.writeOn(outputStream);
-            writeInt(target.state.length);
-            target.writeOn(outputStream);
+            writeInt(configuration.state.length);
+            configuration.writeOn(outputStream);
             outputStream.flush();
 
             //read number of values
@@ -222,7 +229,41 @@ public class TCPDriver extends AbstractDriver {
             return values;
         } catch (IOException e) {
             e.printStackTrace();
-            return new boolean[] {};
+            return new boolean[0];
+        }
+    }
+
+    @SuppressWarnings("Duplicates")
+    public synchronized boolean[] getAtomicPropositionValuations(Configuration source, FireableTransition fireable, Object payload, Configuration target) {
+        try {
+            //send request
+            RequestKind.REQ_EXTENDED_ATOMIC_PROPOSITION_VALUATIONS.writeOn(outputStream);
+            //send source
+            writeInt(source.state.length);
+            source.writeOn(outputStream);
+            //send the fireable
+            fireable.writeOn(outputStream);
+            //send the payload
+            byte[] thePayload = (byte[]) payload;
+            writeInt(thePayload.length);
+            outputStream.write(thePayload);
+            //send the target
+            writeInt(target.state.length);
+            target.writeOn(outputStream);
+
+            //read number of values
+            int valueCount = readInt(4);
+            byte[] rawValues = readData(valueCount);
+
+            boolean[] values = new boolean[valueCount];
+            for (int i = 0; i < valueCount; i++) {
+                values[i] = rawValues[i] > 0;
+            }
+
+            return values;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return new boolean[0];
         }
     }
 
@@ -270,7 +311,7 @@ public class TCPDriver extends AbstractDriver {
             //read result
             return readString();
         } catch (IOException e) {
-            return "Transition " + Arrays.toString(transition.rawTransitionData);
+            return "Transition " + Arrays.toString(transition.data);
         }
     }
 }

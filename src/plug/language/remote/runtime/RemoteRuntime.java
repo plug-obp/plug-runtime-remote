@@ -58,9 +58,8 @@ public class RemoteRuntime implements ITransitionRelation<Configuration, Fireabl
     }
 
     @Override
-    public synchronized IFiredTransition<Configuration, ?> fireOneTransition(Configuration source, FireableTransition transition) {
-        Collection<Configuration> target = driver.fireOneTransition(source, transition);
-        return new FiredTransition<>(source, target, transition);
+    public synchronized IFiredTransition<Configuration, FireableTransition> fireOneTransition(Configuration source, FireableTransition transition) {
+        return driver.fireOneTransition(source, transition);
     }
 
     @Override
