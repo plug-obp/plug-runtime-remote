@@ -233,12 +233,18 @@ public class TCPDriver extends AbstractDriver {
             Marshaller.writeInt(fireable.data.length, outputStream);
             fireable.writeOn(outputStream);
             //send the payload
-            byte[] thePayload = (byte[]) payload;
-            Marshaller.writeInt(thePayload.length, outputStream);
-            outputStream.write(thePayload);
+//            if (payload == null) {
+//                Marshaller.writeInt(0, outputStream);
+//            } else {
+                byte[] thePayload = (byte[]) payload;
+                Marshaller.writeInt(thePayload.length, outputStream);
+                outputStream.write(thePayload);
+//            }
             //send the target
             Marshaller.writeInt(target.state.length, outputStream);
             target.writeOn(outputStream);
+
+            outputStream.flush();
 
             //read number of values
             int valueCount = Unmarshaller.readInt(inputStream);
