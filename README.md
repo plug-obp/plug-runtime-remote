@@ -114,7 +114,7 @@ and waits for
 
 Sends 
 ```
-15
+16
 [4:configuration_size]
 [configuration_size:source_configuration]
 [4:transition_size]
