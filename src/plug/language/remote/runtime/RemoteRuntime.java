@@ -71,4 +71,9 @@ public class RemoteRuntime implements ITransitionRelation<Configuration, Fireabl
     public void close() {
         driver.disconnect();
     }
+
+    @Override
+    public boolean hasBlockingTransitions() {
+        return true;
+    }
 }
