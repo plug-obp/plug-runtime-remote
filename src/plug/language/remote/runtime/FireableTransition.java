@@ -1,7 +1,10 @@
 package plug.language.remote.runtime;
 
+import plug.statespace.transitions.FiredTransition;
+
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Arrays;
 
 /**
  * Class for a fireable transition of the model.
@@ -18,5 +21,14 @@ public class FireableTransition
 
 	public void writeOn(OutputStream os) throws IOException {
 		os.write(data);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof FiredTransition) {
+			FireableTransition other = (FireableTransition) obj;
+			return Arrays.equals(this.data, other.data);
+		}
+		return false;
 	}
 }
