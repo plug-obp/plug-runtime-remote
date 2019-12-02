@@ -1,7 +1,5 @@
 package plug.language.remote.runtime;
 
-import plug.statespace.transitions.FiredTransition;
-
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Arrays;
@@ -25,7 +23,7 @@ public class FireableTransition
 
 	@Override
 	public boolean equals(Object obj) {
-		if (obj instanceof FiredTransition) {
+		if (obj instanceof FireableTransition) {
 			FireableTransition other = (FireableTransition) obj;
 			return Arrays.equals(this.data, other.data);
 		}
