@@ -12,6 +12,11 @@ import plug.language.remote.runtime.RemoteRuntime;
 public class RemotePlugin implements ILanguagePlugin<RemoteRuntime> {
     RemoteLoader loader = new RemoteLoader();
 
+    public RemotePlugin(){}
+    public RemotePlugin(RemoteLoader loader) {
+        this.loader = loader;
+    }
+
     @Override
     public String[] getExtensions() {
         return new String[] { ".remote"};
