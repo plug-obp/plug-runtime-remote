@@ -3,8 +3,8 @@ package plug.language.remote;
 import java.util.List;
 import java.util.Objects;
 import plug.runtime.core.ITransitionRelation;
-import plug.core.IRuntimeView;
-import plug.core.view.ConfigurationItem;
+import plug.runtime.core.v0.IRuntimeView;
+import plug.runtime.core.v0.view.ConfigurationItem;
 import plug.language.remote.runtime.Configuration;
 import plug.language.remote.runtime.FireableTransition;
 import plug.language.remote.runtime.RemoteRuntime;
@@ -36,7 +36,7 @@ public class RemoteRuntimeView implements IRuntimeView<Configuration, FireableTr
 	}
 
 	@Override
-	public String getActionDescription(Object action) {
+	public String getOutputDescription(Object action) {
     	if (action instanceof FireableTransition) {
 			return getFireableTransitionDescription((FireableTransition) action);
 		} else {

@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 import plug.core.IFiredTransition;
-import plug.core.view.ConfigurationItem;
+import plug.runtime.core.v0.view.ConfigurationItem;
 import plug.language.remote.runtime.Configuration;
 import plug.language.remote.runtime.FireableTransition;
 

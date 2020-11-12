@@ -12,7 +12,7 @@ import plug.core.IConfiguration;
 import plug.core.IFiredTransition;
 import plug.runtime.core.ITransitionRelation;
 import plug.core.RuntimeDescription;
-import plug.core.view.ConfigurationItem;
+import plug.runtime.core.v0.view.ConfigurationItem;
 import plug.utils.marshaling.Marshaller;
 import plug.utils.marshaling.Unmarshaller;
 
