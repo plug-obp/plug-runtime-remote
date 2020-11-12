@@ -7,7 +7,7 @@ import java.util.Objects;
 import java.util.Set;
 import plug.core.IConfiguration;
 import plug.core.IFiredTransition;
-import plug.core.ITransitionRelation;
+import plug.runtime.core.ITransitionRelation;
 import plug.core.RuntimeDescription;
 import plug.core.defaults.DefaultConfiguration;
 import plug.language.remote.client.DistantRuntime;

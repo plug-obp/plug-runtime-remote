@@ -1,6 +1,6 @@
 package plug.language.remote.runtime;
 
-import plug.core.IAtomicPropositionsEvaluator;
+import plug.runtime.core.IAtomicPropositionsEvaluator;
 import plug.language.remote.driver.TCPDriver;
 
 public class RemoteAtomicPropositionsEvaluator implements IAtomicPropositionsEvaluator<Configuration, FireableTransition> {

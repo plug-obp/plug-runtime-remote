@@ -6,7 +6,7 @@ import java.io.PrintWriter;
 import java.net.URI;
 import java.nio.file.Paths;
 import java.util.Map;
-import plug.core.ILanguageLoader;
+import plug.runtime.core.ILanguageLoader;
 import plug.language.remote.runtime.RemoteRuntime;
 import plug.utils.exec.ProcessRunner;
 

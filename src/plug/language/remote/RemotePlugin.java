@@ -2,7 +2,7 @@ package plug.language.remote;
 
 import java.util.LinkedList;
 import java.util.Random;
-import plug.core.ILanguagePlugin;
+import plug.runtime.core.ILanguagePlugin;
 import plug.core.IRuntimeView;
 import plug.language.remote.runtime.RemoteRuntime;
 

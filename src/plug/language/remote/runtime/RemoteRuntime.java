@@ -3,11 +3,10 @@ package plug.language.remote.runtime;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Set;
-import plug.core.IAtomicPropositionsEvaluator;
+import plug.runtime.core.IAtomicPropositionsEvaluator;
 import plug.core.IFiredTransition;
-import plug.core.ITransitionRelation;
+import plug.runtime.core.ITransitionRelation;
 import plug.language.remote.driver.TCPDriver;
-import plug.statespace.transitions.FiredTransition;
 
 /**
  * Implementation of the runtime via tcp.

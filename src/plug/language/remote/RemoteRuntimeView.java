@@ -2,7 +2,7 @@ package plug.language.remote;
 
 import java.util.List;
 import java.util.Objects;
-import plug.core.ITransitionRelation;
+import plug.runtime.core.ITransitionRelation;
 import plug.core.IRuntimeView;
 import plug.core.view.ConfigurationItem;
 import plug.language.remote.runtime.Configuration;
