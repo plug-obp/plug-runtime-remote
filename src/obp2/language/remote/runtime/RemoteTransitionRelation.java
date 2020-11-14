@@ -13,7 +13,7 @@ import java.util.Set;
  *
  * @author Valentin Besnard & Ciprian Teodorov
  */
-public class RemoteTransitionRelation extends DefaultTransitionRelation<Configuration, FireableTransition,byte[]> implements AutoCloseable {
+public class RemoteTransitionRelation extends DefaultTransitionRelation<Configuration, FireableTransition,byte[]> {
 
     /**
      * The instance of the driver
@@ -62,7 +62,7 @@ public class RemoteTransitionRelation extends DefaultTransitionRelation<Configur
     }
 
     @Override
-    public void close() {
+    public void close() throws IOException {
         driver.disconnect();
     }
 

@@ -4,8 +4,8 @@ import obp2.core.IFiredTransition;
 import obp2.core.defaults.FiredTransition;
 import obp2.language.remote.protocol.RequestKind;
 import obp2.language.remote.runtime.Configuration;
-import obp2.runtime.core.TreeItem;
 import obp2.language.remote.runtime.FireableTransition;
+import obp2.runtime.core.TreeItem;
 import plug.utils.marshaling.Marshaller;
 import plug.utils.marshaling.Unmarshaller;
 
@@ -64,12 +64,8 @@ public class TCPDriver extends AbstractDriver {
         }
     }
 
-    public void disconnect() {
-        try {
-            socket.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public void disconnect() throws IOException {
+        socket.close();
     }
 
 	private String readString() throws IOException {

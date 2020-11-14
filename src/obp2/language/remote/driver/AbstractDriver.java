@@ -15,7 +15,7 @@ import obp2.language.remote.runtime.FireableTransition;
  */
 public abstract class AbstractDriver {
     public abstract void connect() throws IOException;
-    public abstract void disconnect();
+    public abstract void disconnect() throws IOException;
     public abstract Set<Configuration> initialConfigurations();
     public abstract Collection<FireableTransition> fireableTransitionsFrom(Configuration configuration);
     public abstract IFiredTransition<Configuration, FireableTransition> fireOneTransition(Configuration source, FireableTransition toFire);
