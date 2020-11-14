@@ -1,9 +1,9 @@
-package plug.language.remote.runtime;
+package obp2.language.remote.runtime;
 
-import plug.runtime.core.IAtomicPropositionsEvaluator;
-import plug.language.remote.driver.TCPDriver;
+import obp2.language.remote.driver.TCPDriver;
+import obp2.runtime.core.defaults.DefaultAtomicPropositionEvaluator;
 
-public class RemoteAtomicPropositionsEvaluator implements IAtomicPropositionsEvaluator<Configuration, FireableTransition> {
+public class RemoteAtomicPropositionsEvaluator extends DefaultAtomicPropositionEvaluator<Configuration, FireableTransition, byte[]> {
 
 	protected final TCPDriver driver;
 
@@ -22,7 +22,7 @@ public class RemoteAtomicPropositionsEvaluator implements IAtomicPropositionsEva
 	}
 
 	@Override
-	public boolean[] getAtomicPropositionValuations(Configuration source, FireableTransition fireable, Object payload, Configuration target) {
+	public boolean[] getAtomicPropositionValuations(Configuration source, FireableTransition fireable, byte[] payload, Configuration target) {
 		return driver.getAtomicPropositionValuations(source, fireable, payload, target);
 	}
 }

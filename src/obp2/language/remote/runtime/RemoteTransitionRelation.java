@@ -1,19 +1,19 @@
-package plug.language.remote.runtime;
+package obp2.language.remote.runtime;
+
+import obp2.core.IFiredTransition;
+import obp2.language.remote.driver.TCPDriver;
+import obp2.runtime.core.defaults.DefaultTransitionRelation;
 
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Set;
-import plug.runtime.core.IAtomicPropositionsEvaluator;
-import plug.core.IFiredTransition;
-import plug.runtime.core.ITransitionRelation;
-import plug.language.remote.driver.TCPDriver;
 
 /**
  * Implementation of the runtime via tcp.
  *
  * @author Valentin Besnard & Ciprian Teodorov
  */
-public class RemoteRuntime implements ITransitionRelation<Configuration, FireableTransition> {
+public class RemoteTransitionRelation extends DefaultTransitionRelation<Configuration, FireableTransition,byte[]> implements AutoCloseable {
 
     /**
      * The instance of the driver
@@ -28,7 +28,7 @@ public class RemoteRuntime implements ITransitionRelation<Configuration, Fireabl
      * @param address the IP address of the connection.
      * @param port    the port of the connection.
      */
-    public RemoteRuntime(String address, int port) {
+    public RemoteTransitionRelation(String address, int port) {
         driver = new TCPDriver(address, port);
         atomicPropositionsEvaluator = new RemoteAtomicPropositionsEvaluator(driver);
     }
@@ -59,11 +59,6 @@ public class RemoteRuntime implements ITransitionRelation<Configuration, Fireabl
     @Override
     public synchronized IFiredTransition<Configuration, FireableTransition> fireOneTransition(Configuration source, FireableTransition transition) {
         return driver.fireOneTransition(source, transition);
-    }
-
-    @Override
-    public IAtomicPropositionsEvaluator getAtomicPropositionEvaluator() {
-        return atomicPropositionsEvaluator;
     }
 
     @Override

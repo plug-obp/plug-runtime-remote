@@ -1,14 +1,14 @@
-package plug.language.remote.driver;
+package obp2.language.remote.driver;
 
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
-import plug.core.IFiredTransition;
-import plug.runtime.core.v0.view.ConfigurationItem;
-import plug.language.remote.runtime.Configuration;
-import plug.language.remote.runtime.FireableTransition;
+import obp2.core.IFiredTransition;
+import obp2.language.remote.runtime.Configuration;
+import obp2.runtime.core.TreeItem;
+import obp2.language.remote.runtime.FireableTransition;
 
 /**
  * Created by Ciprian TEODOROV on 08/09/17.
@@ -25,7 +25,7 @@ public abstract class AbstractDriver {
     public abstract boolean[] getAtomicPropositionValuations(Configuration source, FireableTransition fireable, Object payload, Configuration target);
 
 
-    public abstract List<ConfigurationItem> getConfigurationItems(Configuration value);
+    public abstract List<TreeItem> getConfigurationItems(Configuration value);
 
     public String getConfigurationDescription(Configuration value) {
         return Integer.toHexString(value.hashCode());

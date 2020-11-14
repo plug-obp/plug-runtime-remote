@@ -1,8 +1,8 @@
-package plug.language.remote;
+package obp2.language.remote;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class RemoteDescription {
+public class RemoteResource {
 
 	// command to execute for a distant runtime
 	private final String[] command;
@@ -12,7 +12,7 @@ public class RemoteDescription {
 	// port to connect to the runtime
 	private final int port;
 
-	public RemoteDescription(
+	public RemoteResource(
 			@JsonProperty("command")
 			String[] command,
 			@JsonProperty(value = "host", defaultValue = "")

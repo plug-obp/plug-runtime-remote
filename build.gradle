@@ -12,8 +12,7 @@ apply plugin: 'plug.plugin'
 
 dependencies {
 	compile group: 'io.github.teodorov', name: 'announce4j', version: 'master'
-	compile group: 'fr.ensta-bretagne', name: 'plug-core', version: plug.version
-	compile group: 'fr.ensta-bretagne', name: 'plug-utils', version: plug.version
+	compile group: 'fr.ensta-bretagne', name: 'obp2-runtime', version: '1.0.0'
 
 	compile group: 'com.fasterxml.jackson.core', name:'jackson-databind', version:'2.7.2'
 }

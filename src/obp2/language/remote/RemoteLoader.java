@@ -1,4 +1,4 @@
-package plug.language.remote;
+package obp2.language.remote;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
@@ -6,15 +6,15 @@ import java.io.PrintWriter;
 import java.net.URI;
 import java.nio.file.Paths;
 import java.util.Map;
-import plug.runtime.core.ILanguageLoader;
-import plug.language.remote.runtime.RemoteRuntime;
+import obp2.runtime.core.ILanguageLoader;
+import obp2.language.remote.runtime.RemoteTransitionRelation;
 import plug.utils.exec.ProcessRunner;
 
-public class RemoteLoader implements ILanguageLoader<RemoteRuntime> {
+public class RemoteLoader implements ILanguageLoader<RemoteTransitionRelation> {
 
 	@Override
-	public RemoteRuntime getRuntime(URI modelURI, Map<String, Object> options) throws IOException {
-		RemoteDescription description = new ObjectMapper().readValue(modelURI.toURL(), RemoteDescription.class);
+	public RemoteTransitionRelation getRuntime(URI modelURI, Map<String, Object> options) throws IOException {
+		RemoteResource description = new ObjectMapper().readValue(modelURI.toURL(), RemoteResource.class);
 
 		int port = description.getPort();
 		if (port <= 0) {
@@ -43,7 +43,7 @@ public class RemoteLoader implements ILanguageLoader<RemoteRuntime> {
 			host = "localhost";
 		}
 
-		RemoteRuntime runtime = new RemoteRuntime(host, port);
+		RemoteTransitionRelation runtime = new RemoteTransitionRelation(host, port);
 		// TODO check when the runtime should be initialized
 		runtime.initializeRuntime();
 		return runtime;

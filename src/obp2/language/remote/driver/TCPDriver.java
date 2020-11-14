@@ -1,11 +1,11 @@
-package plug.language.remote.driver;
+package obp2.language.remote.driver;
 
-import plug.core.IFiredTransition;
-import plug.runtime.core.v0.view.ConfigurationItem;
-import plug.language.remote.protocol.RequestKind;
-import plug.language.remote.runtime.Configuration;
-import plug.language.remote.runtime.FireableTransition;
-import plug.statespace.transitions.FiredTransition;
+import obp2.core.IFiredTransition;
+import obp2.core.defaults.FiredTransition;
+import obp2.language.remote.protocol.RequestKind;
+import obp2.language.remote.runtime.Configuration;
+import obp2.runtime.core.TreeItem;
+import obp2.language.remote.runtime.FireableTransition;
 import plug.utils.marshaling.Marshaller;
 import plug.utils.marshaling.Unmarshaller;
 
@@ -266,22 +266,22 @@ public class TCPDriver extends AbstractDriver {
         }
     }
 
-    private synchronized ConfigurationItem readConfigurationItem() throws IOException {
+    private synchronized TreeItem readConfigurationItem() throws IOException {
 		String type = readString();
 		String name = readString();
 		String icon = readString();
 
-		List<ConfigurationItem> children = new ArrayList<>();
+		List<TreeItem> children = new ArrayList<>();
 		int childrenCount = Unmarshaller.readInt(inputStream);
         for (int i = 0; i < childrenCount; i++) {
             children.add(readConfigurationItem());
         }
 
-    	return new ConfigurationItem(type, name, icon, children);
+    	return new TreeItem(type, name, icon, children);
 	}
 
     @Override
-    public synchronized List<ConfigurationItem> getConfigurationItems(Configuration value) {
+    public synchronized List<TreeItem> getConfigurationItems(Configuration value) {
     	try {
 			RequestKind.REQ_CONFIGURATION_ITEMS.writeOn(outputStream);
             Marshaller.writeInt(value.state.length, outputStream);
@@ -289,7 +289,7 @@ public class TCPDriver extends AbstractDriver {
 			outputStream.flush();
 
 			//read result
-            List<ConfigurationItem> items = new ArrayList<>();
+            List<TreeItem> items = new ArrayList<>();
             int itemsCount = Unmarshaller.readInt(inputStream);
             for (int i = 0; i < itemsCount; i++) {
                 items.add(readConfigurationItem());

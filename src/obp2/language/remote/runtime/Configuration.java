@@ -1,9 +1,9 @@
-package plug.language.remote.runtime;
+package obp2.language.remote.runtime;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Arrays;
-import plug.core.defaults.DefaultConfiguration;
+import obp2.core.defaults.DefaultConfiguration;
 
 /**
  * Class for configuration of the model.
