@@ -10,6 +10,7 @@ import obp2.runtime.core.LanguageModule;
 import obp2.runtime.core.defaults.DefaultAtomicPropositionsProvider;
 import obp2.runtime.core.defaults.DefaultMarshaller;
 import obp2.runtime.core.defaults.DefaultTreeProjector;
+import plug.utils.Pair;
 import plug.utils.exec.ProcessRunner;
 
 import java.io.IOException;
@@ -18,18 +19,14 @@ import java.net.URI;
 import java.nio.file.Paths;
 import java.util.LinkedList;
 import java.util.Random;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 
 /**
  * Created by Ciprian TEODOROV on 02/03/17.
  */
 public class RemotePlugin implements ILanguagePlugin<URI, Configuration, FireableTransition, byte[]> {
-    RemoteLoader loader = new RemoteLoader();
-
     public RemotePlugin(){}
-    public RemotePlugin(RemoteLoader loader) {
-        this.loader = loader;
-    }
 
     @Override
     public String[] getExtensions() {
@@ -40,22 +37,32 @@ public class RemotePlugin implements ILanguagePlugin<URI, Configuration, Fireabl
         return "Remote";
     }
 
-    @Override
-    public Function<URI, LanguageModule<Configuration, FireableTransition, byte[]>> getSupplier() {
-        return (description) -> {
-            RemoteTransitionRelation transitionRelation = getRemoteTransitionRelation(description);
-            RemoteAtomicPropositionsEvaluator atomicPropositionsEvaluator = new RemoteAtomicPropositionsEvaluator(transitionRelation.getDriver());
+    public static LanguageModule<Configuration, FireableTransition, byte[]> getLanguageModule(String host, int port) {
+        RemoteTransitionRelation transitionRelation = new RemoteTransitionRelation(host, port);
+        try {
+            transitionRelation.initializeRuntime();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        RemoteAtomicPropositionsEvaluator atomicPropositionsEvaluator = new RemoteAtomicPropositionsEvaluator(transitionRelation.getDriver());
 
-            return new LanguageModule<>(
-                    transitionRelation,
-                    atomicPropositionsEvaluator,
-                    new DefaultAtomicPropositionsProvider<>(),
-                    new DefaultTreeProjector<>(),
-                    new DefaultMarshaller<>());
+        return new LanguageModule<>(
+                transitionRelation,
+                atomicPropositionsEvaluator,
+                new DefaultAtomicPropositionsProvider<>(),
+                new DefaultTreeProjector<>(),
+                new DefaultMarshaller<>());
+    }
+
+    @Override
+    public Function<URI, LanguageModule<Configuration, FireableTransition, byte[]>> languageModuleFunction() {
+        return (description) -> {
+            Pair<String, Integer> endpoint = getEndpoint(description);
+            return getLanguageModule(endpoint.a, endpoint.b);
         };
     }
 
-    private RemoteTransitionRelation getRemoteTransitionRelation(URI description) {
+    private Pair<String, Integer> getEndpoint(URI description) {
         RemoteResource resource = null;
         try {
             resource = new ObjectMapper().readValue(description.toURL(), RemoteResource.class);
@@ -87,7 +94,7 @@ public class RemotePlugin implements ILanguagePlugin<URI, Configuration, Fireabl
             // sets the host to localhost
             host = "localhost";
         }
-        return new RemoteTransitionRelation(host, port);
+        return new Pair<>(host, port);
     }
 
     private final static Random random = new Random();
