@@ -1,10 +1,12 @@
 package obp2.language.remote;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import obp2.language.remote.runtime.*;
+import obp2.language.remote.runtime.Configuration;
+import obp2.language.remote.runtime.FireableTransition;
+import obp2.language.remote.runtime.RemoteLanguageModule;
+import obp2.runtime.core.ILanguageModule;
 import obp2.runtime.core.ILanguagePlugin;
 import obp2.runtime.core.LanguageModule;
-import obp2.runtime.core.empty.NoMarshaller;
 import plug.utils.Pair;
 import plug.utils.exec.ProcessRunner;
 
@@ -36,7 +38,7 @@ public class RemotePlugin implements ILanguagePlugin<URI, Configuration, Fireabl
     }
 
     @Override
-    public Function<URI, LanguageModule<Configuration, FireableTransition, byte[]>> languageModuleFunction() {
+    public Function<URI, ILanguageModule<Configuration, FireableTransition, byte[]>> languageModuleFunction() {
         return (description) -> {
             Pair<String, Integer> endpoint = getEndpoint(description);
             return getLanguageModule(endpoint.a, endpoint.b);
