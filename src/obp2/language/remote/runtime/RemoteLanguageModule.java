@@ -1,0 +1,27 @@
+package obp2.language.remote.runtime;
+
+import obp2.runtime.core.LanguageModule;
+
+import java.io.IOException;
+
+public class RemoteLanguageModule extends LanguageModule<Configuration, FireableTransition,byte[]> {
+
+    public RemoteLanguageModule(String host, int port) {
+        RemoteTransitionRelation transitionRelation = new RemoteTransitionRelation(host, port);
+        try {
+            transitionRelation.initializeRuntime();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        RemoteAtomicPropositionsEvaluator atomicPropositionsEvaluator = new RemoteAtomicPropositionsEvaluator(transitionRelation.getDriver());
+
+        this.transitionRelation = transitionRelation;
+        this.atomicPropositionsEvaluator = atomicPropositionsEvaluator;
+        this.treeProjector = new RemoteRuntimeView();
+    }
+
+    @Override
+    public void close() throws Exception {
+        ((RemoteTransitionRelation)getTransitionRelation()).close();
+    }
+}

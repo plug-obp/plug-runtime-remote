@@ -2,7 +2,8 @@ package obp2.language.remote.runtime;
 
 import obp2.core.IFiredTransition;
 import obp2.language.remote.driver.TCPDriver;
-import obp2.runtime.core.defaults.DefaultTransitionRelation;
+import obp2.runtime.core.ITransitionRelation;
+import obp2.runtime.core.defaults.DefaultLanguageService;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -13,7 +14,10 @@ import java.util.Set;
  *
  * @author Valentin Besnard & Ciprian Teodorov
  */
-public class RemoteTransitionRelation extends DefaultTransitionRelation<Configuration, FireableTransition,byte[]> {
+public class RemoteTransitionRelation
+        extends DefaultLanguageService<Configuration, FireableTransition,byte[]>
+        implements ITransitionRelation<Configuration, FireableTransition,byte[]>
+        ,AutoCloseable  {
 
     /**
      * The instance of the driver

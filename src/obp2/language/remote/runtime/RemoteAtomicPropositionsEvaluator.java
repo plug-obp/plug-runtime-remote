@@ -1,9 +1,12 @@
 package obp2.language.remote.runtime;
 
 import obp2.language.remote.driver.TCPDriver;
-import obp2.runtime.core.defaults.DefaultAtomicPropositionEvaluator;
+import obp2.runtime.core.IAtomicPropositionsEvaluator;
+import obp2.runtime.core.defaults.DefaultLanguageService;
 
-public class RemoteAtomicPropositionsEvaluator extends DefaultAtomicPropositionEvaluator<Configuration, FireableTransition, byte[]> {
+public class RemoteAtomicPropositionsEvaluator
+		extends DefaultLanguageService<Configuration, FireableTransition, byte[]>
+		implements IAtomicPropositionsEvaluator<Configuration, FireableTransition, byte[]> {
 
 	protected final TCPDriver driver;
 

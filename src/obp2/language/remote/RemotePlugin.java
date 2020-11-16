@@ -1,15 +1,10 @@
 package obp2.language.remote;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import obp2.language.remote.runtime.Configuration;
-import obp2.language.remote.runtime.FireableTransition;
-import obp2.language.remote.runtime.RemoteAtomicPropositionsEvaluator;
-import obp2.language.remote.runtime.RemoteTransitionRelation;
+import obp2.language.remote.runtime.*;
 import obp2.runtime.core.ILanguagePlugin;
 import obp2.runtime.core.LanguageModule;
-import obp2.runtime.core.defaults.DefaultAtomicPropositionsProvider;
-import obp2.runtime.core.defaults.DefaultMarshaller;
-import obp2.runtime.core.defaults.DefaultTreeProjector;
+import obp2.runtime.core.empty.NoMarshaller;
 import plug.utils.Pair;
 import plug.utils.exec.ProcessRunner;
 
@@ -19,7 +14,6 @@ import java.net.URI;
 import java.nio.file.Paths;
 import java.util.LinkedList;
 import java.util.Random;
-import java.util.function.BiFunction;
 import java.util.function.Function;
 
 /**
@@ -38,20 +32,7 @@ public class RemotePlugin implements ILanguagePlugin<URI, Configuration, Fireabl
     }
 
     public static LanguageModule<Configuration, FireableTransition, byte[]> getLanguageModule(String host, int port) {
-        RemoteTransitionRelation transitionRelation = new RemoteTransitionRelation(host, port);
-        try {
-            transitionRelation.initializeRuntime();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        RemoteAtomicPropositionsEvaluator atomicPropositionsEvaluator = new RemoteAtomicPropositionsEvaluator(transitionRelation.getDriver());
-
-        return new LanguageModule<>(
-                transitionRelation,
-                atomicPropositionsEvaluator,
-                new DefaultAtomicPropositionsProvider<>(),
-                new DefaultTreeProjector<>(),
-                new DefaultMarshaller<>());
+        return new RemoteLanguageModule(host, port);
     }
 
     @Override
