@@ -9,6 +9,7 @@ buildscript {
 }
 
 apply plugin: 'plug.plugin'
+version='1.0.0'
 
 dependencies {
 	compile group: 'io.github.teodorov', name: 'announce4j', version: 'master'
