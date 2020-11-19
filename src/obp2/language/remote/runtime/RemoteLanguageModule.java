@@ -18,6 +18,11 @@ public class RemoteLanguageModule extends LanguageModule<Configuration, Fireable
         this.transitionRelation = transitionRelation;
         this.atomicPropositionsEvaluator = atomicPropositionsEvaluator;
         this.treeProjector = new RemoteRuntimeView();
+        this.transitionRelation.setModule(this);
+        this.atomicPropositionsEvaluator.setModule(this);
+        this.atomicPropositionsProvider.setModule(this);
+        this.marshaller.setModule(this);
+        this.treeProjector.setModule(this);
     }
 
     @Override
