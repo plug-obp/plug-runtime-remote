@@ -24,8 +24,6 @@ public class RemoteTransitionRelation
      */
     protected final TCPDriver driver;
 
-    protected final RemoteAtomicPropositionsEvaluator atomicPropositionsEvaluator;
-
     /**
      * Constructor of the ViaTCPRuntime.
      *
@@ -34,7 +32,6 @@ public class RemoteTransitionRelation
      */
     public RemoteTransitionRelation(String address, int port) {
         driver = new TCPDriver(address, port);
-        atomicPropositionsEvaluator = new RemoteAtomicPropositionsEvaluator(driver);
     }
 
     public TCPDriver getDriver() {
