@@ -22,4 +22,9 @@ public class RemoteRuntimeView extends DefaultTreeProjector<Configuration, Remot
 	public TreeItem projectFireable(RemoteAction transition) {
     	return new TreeItem(getTransitionRelation().getDriver().getFireableTransitionDescription(transition));
 	}
+
+//	@Override
+//	public TreeItem projectPayload(byte[] output) {
+//		return new TreeItem(new String(output, StandardCharsets.UTF_8));
+//	}
 }
