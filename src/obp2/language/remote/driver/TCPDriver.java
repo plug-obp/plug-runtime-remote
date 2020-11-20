@@ -129,9 +129,9 @@ public class TCPDriver extends AbstractDriver {
 
     @SuppressWarnings("Duplicates")
     @Override
-    public synchronized IFiredTransition<Configuration, RemoteAction> fireOneTransition(Configuration source, RemoteAction toFire) {
+    public synchronized IFiredTransition<Configuration, RemoteAction, byte[]> fireOneTransition(Configuration source, RemoteAction toFire) {
         List<Configuration> configurations = new LinkedList<>();
-        byte payload[] = new byte[0];
+        byte[] payload = new byte[0];
         try {
             //send request
             RequestKind.REQ_FIRE_TRANSITION.writeOn(outputStream);

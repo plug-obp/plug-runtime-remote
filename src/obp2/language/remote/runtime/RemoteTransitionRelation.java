@@ -58,7 +58,7 @@ public class RemoteTransitionRelation
     }
 
     @Override
-    public synchronized IFiredTransition<Configuration, RemoteAction> fireOneTransition(Configuration source, RemoteAction transition) {
+    public synchronized IFiredTransition<Configuration, RemoteAction, byte[]> fireOneTransition(Configuration source, RemoteAction transition) {
         return driver.fireOneTransition(source, transition);
     }
 
