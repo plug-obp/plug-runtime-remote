@@ -22,6 +22,6 @@ public enum RequestKind {
 
     public void writeOn(OutputStream os) throws IOException {
         os.write((byte)1);
-        os.write((byte)value);
+        os.write(value);
     }
 }

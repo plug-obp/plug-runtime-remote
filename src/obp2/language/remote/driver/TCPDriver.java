@@ -56,7 +56,6 @@ public class TCPDriver extends AbstractDriver {
                 } catch (InterruptedException e1) { /* nothing to do */ }
                 continue;
             }
-
         }
 
         if (exception != null) {
