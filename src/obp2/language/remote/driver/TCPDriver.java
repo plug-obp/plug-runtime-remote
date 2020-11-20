@@ -73,7 +73,6 @@ public class TCPDriver extends AbstractDriver {
         return size < 0 ? null : new String(Unmarshaller.readData(size, inputStream), StandardCharsets.UTF_8);
 	}
 
-	@SuppressWarnings("Duplicates")
     @Override
     public synchronized Set<Configuration> initialConfigurations() {
         Set<Configuration> configurations = new HashSet<>();
@@ -127,7 +126,6 @@ public class TCPDriver extends AbstractDriver {
         return fireableTransitions;
     }
 
-    @SuppressWarnings("Duplicates")
     @Override
     public synchronized IFiredTransition<Configuration, RemoteAction, byte[]> fireOneTransition(Configuration source, RemoteAction toFire) {
         List<Configuration> configurations = new LinkedList<>();
