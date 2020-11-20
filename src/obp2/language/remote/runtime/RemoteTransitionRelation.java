@@ -15,8 +15,8 @@ import java.util.Set;
  * @author Valentin Besnard & Ciprian Teodorov
  */
 public class RemoteTransitionRelation
-        extends DefaultLanguageService<Configuration, FireableTransition,byte[]>
-        implements ITransitionRelation<Configuration, FireableTransition,byte[]>
+        extends DefaultLanguageService<Configuration, RemoteAction,byte[]>
+        implements ITransitionRelation<Configuration, RemoteAction,byte[]>
         ,AutoCloseable  {
 
     /**
@@ -53,12 +53,12 @@ public class RemoteTransitionRelation
     }
 
     @Override
-    public synchronized Collection<FireableTransition> fireableTransitionsFrom(Configuration configuration) {
+    public synchronized Collection<RemoteAction> fireableTransitionsFrom(Configuration configuration) {
         return driver.fireableTransitionsFrom(configuration);
     }
 
     @Override
-    public synchronized IFiredTransition<Configuration, FireableTransition> fireOneTransition(Configuration source, FireableTransition transition) {
+    public synchronized IFiredTransition<Configuration, RemoteAction> fireOneTransition(Configuration source, RemoteAction transition) {
         return driver.fireOneTransition(source, transition);
     }
 

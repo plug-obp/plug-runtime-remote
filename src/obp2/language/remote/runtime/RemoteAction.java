@@ -8,12 +8,12 @@ import java.util.Arrays;
  * Class for a fireable transition of the model.
  * @author valentin
  */
-public class FireableTransition
+public class RemoteAction
 {
 
 	public final byte data[];
 
-	public FireableTransition(byte[] data) {
+	public RemoteAction(byte[] data) {
 		this.data = data;
 	}
 
@@ -23,10 +23,17 @@ public class FireableTransition
 
 	@Override
 	public boolean equals(Object obj) {
-		if (obj instanceof FireableTransition) {
-			FireableTransition other = (FireableTransition) obj;
+		if (obj instanceof RemoteAction) {
+			RemoteAction other = (RemoteAction) obj;
 			return Arrays.equals(this.data, other.data);
 		}
 		return false;
+	}
+
+	@Override
+	public String toString() {
+		return "RemoteAction {" +
+				"data=" + Arrays.toString(data) +
+				'}';
 	}
 }

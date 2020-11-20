@@ -4,7 +4,7 @@ import obp2.core.IFiredTransition;
 import obp2.core.defaults.FiredTransition;
 import obp2.language.remote.protocol.RequestKind;
 import obp2.language.remote.runtime.Configuration;
-import obp2.language.remote.runtime.FireableTransition;
+import obp2.language.remote.runtime.RemoteAction;
 import obp2.runtime.core.TreeItem;
 import plug.utils.marshaling.Marshaller;
 import plug.utils.marshaling.Unmarshaller;
@@ -100,8 +100,8 @@ public class TCPDriver extends AbstractDriver {
     }
 
     @Override
-    public synchronized Collection<FireableTransition> fireableTransitionsFrom(Configuration configuration) {
-        Collection<FireableTransition> fireableTransitions = new ArrayList<>();
+    public synchronized Collection<RemoteAction> fireableTransitionsFrom(Configuration configuration) {
+        Collection<RemoteAction> fireableTransitions = new ArrayList<>();
 
         try {
             //send request
@@ -118,7 +118,7 @@ public class TCPDriver extends AbstractDriver {
                 //read the transitions size
                 int transitionSize = Unmarshaller.readInt(inputStream);
                 //read the transition
-                fireableTransitions.add(new FireableTransition(Unmarshaller.readData(transitionSize, inputStream)));
+                fireableTransitions.add(new RemoteAction(Unmarshaller.readData(transitionSize, inputStream)));
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -129,7 +129,7 @@ public class TCPDriver extends AbstractDriver {
 
     @SuppressWarnings("Duplicates")
     @Override
-    public synchronized IFiredTransition<Configuration, FireableTransition> fireOneTransition(Configuration source, FireableTransition toFire) {
+    public synchronized IFiredTransition<Configuration, RemoteAction> fireOneTransition(Configuration source, RemoteAction toFire) {
         List<Configuration> configurations = new LinkedList<>();
         byte payload[] = new byte[0];
         try {
@@ -218,7 +218,7 @@ public class TCPDriver extends AbstractDriver {
     }
 
     @SuppressWarnings("Duplicates")
-    public synchronized boolean[] getAtomicPropositionValuations(Configuration source, FireableTransition fireable, Object payload, Configuration target) {
+    public synchronized boolean[] getAtomicPropositionValuations(Configuration source, RemoteAction fireable, Object payload, Configuration target) {
         try {
             //send request
             RequestKind.REQ_EXTENDED_ATOMIC_PROPOSITION_VALUATIONS.writeOn(outputStream);
@@ -297,7 +297,7 @@ public class TCPDriver extends AbstractDriver {
     }
 
     @Override
-    public synchronized String getFireableTransitionDescription(FireableTransition transition) {
+    public synchronized String getFireableTransitionDescription(RemoteAction transition) {
         try {
             RequestKind.REQ_FIREABLE_TRANSITION_DESCRIPTION.writeOn(outputStream);
             Marshaller.writeInt(transition.data.length, outputStream);

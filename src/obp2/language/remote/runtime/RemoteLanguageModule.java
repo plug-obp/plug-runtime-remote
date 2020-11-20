@@ -4,7 +4,7 @@ import obp2.runtime.core.LanguageModule;
 
 import java.io.IOException;
 
-public class RemoteLanguageModule extends LanguageModule<Configuration, FireableTransition,byte[]> {
+public class RemoteLanguageModule extends LanguageModule<Configuration, RemoteAction, byte[]> {
 
     public RemoteLanguageModule(String host, int port) {
         RemoteTransitionRelation transitionRelation = new RemoteTransitionRelation(host, port);

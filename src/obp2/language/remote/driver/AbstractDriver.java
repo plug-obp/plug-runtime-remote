@@ -8,7 +8,7 @@ import java.util.Set;
 import obp2.core.IFiredTransition;
 import obp2.language.remote.runtime.Configuration;
 import obp2.runtime.core.TreeItem;
-import obp2.language.remote.runtime.FireableTransition;
+import obp2.language.remote.runtime.RemoteAction;
 
 /**
  * Created by Ciprian TEODOROV on 08/09/17.
@@ -17,12 +17,12 @@ public abstract class AbstractDriver {
     public abstract void connect() throws IOException;
     public abstract void disconnect() throws IOException;
     public abstract Set<Configuration> initialConfigurations();
-    public abstract Collection<FireableTransition> fireableTransitionsFrom(Configuration configuration);
-    public abstract IFiredTransition<Configuration, FireableTransition> fireOneTransition(Configuration source, FireableTransition toFire);
+    public abstract Collection<RemoteAction> fireableTransitionsFrom(Configuration configuration);
+    public abstract IFiredTransition<Configuration, RemoteAction> fireOneTransition(Configuration source, RemoteAction toFire);
 
     public abstract int[] registerAtomicPropositions(String[] atomicPropositions) throws Exception;
     public abstract boolean[] getAtomicPropositionValuations(Configuration source);
-    public abstract boolean[] getAtomicPropositionValuations(Configuration source, FireableTransition fireable, Object payload, Configuration target);
+    public abstract boolean[] getAtomicPropositionValuations(Configuration source, RemoteAction fireable, Object payload, Configuration target);
 
 
     public abstract List<TreeItem> getConfigurationItems(Configuration value);
@@ -31,5 +31,5 @@ public abstract class AbstractDriver {
         return Integer.toHexString(value.hashCode());
     }
 
-    public abstract String getFireableTransitionDescription(FireableTransition transition);
+    public abstract String getFireableTransitionDescription(RemoteAction transition);
 }

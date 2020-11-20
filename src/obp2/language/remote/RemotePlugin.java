@@ -2,7 +2,7 @@ package obp2.language.remote;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import obp2.language.remote.runtime.Configuration;
-import obp2.language.remote.runtime.FireableTransition;
+import obp2.language.remote.runtime.RemoteAction;
 import obp2.language.remote.runtime.RemoteLanguageModule;
 import obp2.runtime.core.ILanguageModule;
 import obp2.runtime.core.ILanguagePlugin;
@@ -21,7 +21,7 @@ import java.util.function.Function;
 /**
  * Created by Ciprian TEODOROV on 02/03/17.
  */
-public class RemotePlugin implements ILanguagePlugin<URI, Configuration, FireableTransition, byte[]> {
+public class RemotePlugin implements ILanguagePlugin<URI, Configuration, RemoteAction, byte[]> {
     public RemotePlugin(){}
 
     @Override
@@ -33,12 +33,12 @@ public class RemotePlugin implements ILanguagePlugin<URI, Configuration, Fireabl
         return "Remote";
     }
 
-    public static LanguageModule<Configuration, FireableTransition, byte[]> getLanguageModule(String host, int port) {
+    public static LanguageModule<Configuration, RemoteAction, byte[]> getLanguageModule(String host, int port) {
         return new RemoteLanguageModule(host, port);
     }
 
     @Override
-    public Function<URI, ILanguageModule<Configuration, FireableTransition, byte[]>> languageModuleFunction() {
+    public Function<URI, ILanguageModule<Configuration, RemoteAction, byte[]>> languageModuleFunction() {
         return (description) -> {
             Pair<String, Integer> endpoint = getEndpoint(description);
             return getLanguageModule(endpoint.a, endpoint.b);

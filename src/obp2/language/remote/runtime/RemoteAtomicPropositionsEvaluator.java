@@ -5,8 +5,8 @@ import obp2.runtime.core.IAtomicPropositionsEvaluator;
 import obp2.runtime.core.defaults.DefaultLanguageService;
 
 public class RemoteAtomicPropositionsEvaluator
-		extends DefaultLanguageService<Configuration, FireableTransition, byte[]>
-		implements IAtomicPropositionsEvaluator<Configuration, FireableTransition, byte[]> {
+		extends DefaultLanguageService<Configuration, RemoteAction, byte[]>
+		implements IAtomicPropositionsEvaluator<Configuration, RemoteAction, byte[]> {
 
 	protected final TCPDriver driver;
 
@@ -25,7 +25,7 @@ public class RemoteAtomicPropositionsEvaluator
 	}
 
 	@Override
-	public boolean[] getAtomicPropositionValuations(Configuration source, FireableTransition fireable, byte[] payload, Configuration target) {
+	public boolean[] getAtomicPropositionValuations(Configuration source, RemoteAction fireable, byte[] payload, Configuration target) {
 		return driver.getAtomicPropositionValuations(source, fireable, payload, target);
 	}
 }
