@@ -10,7 +10,8 @@ public class RemoteAtomicPropositionsEvaluator
 
 	protected final TCPDriver driver;
 
-	public RemoteAtomicPropositionsEvaluator(TCPDriver driver) {
+	public RemoteAtomicPropositionsEvaluator(RemoteLanguageModule languageModule, TCPDriver driver) {
+		this.setModule(languageModule);
 		this.driver = driver;
 	}
 

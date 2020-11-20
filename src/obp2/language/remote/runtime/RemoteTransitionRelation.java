@@ -30,7 +30,8 @@ public class RemoteTransitionRelation
      * @param address the IP address of the connection.
      * @param port    the port of the connection.
      */
-    public RemoteTransitionRelation(String address, int port) {
+    public RemoteTransitionRelation(RemoteLanguageModule languageModule, String address, int port) {
+        this.setModule(languageModule);
         driver = new TCPDriver(address, port);
     }
 

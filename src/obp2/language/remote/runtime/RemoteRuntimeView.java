@@ -9,6 +9,10 @@ import obp2.runtime.core.defaults.DefaultTreeProjector;
  */
 public class RemoteRuntimeView extends DefaultTreeProjector<Configuration, RemoteAction, byte[]> {
 
+	public RemoteRuntimeView(RemoteLanguageModule languageModule) {
+		this.setModule(languageModule);
+	}
+
 	RemoteTransitionRelation getTransitionRelation() {
 		return (RemoteTransitionRelation) this.getModule().getTransitionRelation();
 	}
