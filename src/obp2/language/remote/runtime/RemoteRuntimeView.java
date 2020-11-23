@@ -19,7 +19,7 @@ public class RemoteRuntimeView extends DefaultTreeProjector<Configuration, Remot
 
 	@Override
 	public TreeItem projectConfiguration(Configuration value) {
-    	return new TreeItem(null, "remote", null, getTransitionRelation().getDriver().getConfigurationItems(value));
+    	return new TreeItem("remote", getTransitionRelation().getDriver().getConfigurationItems(value));
 	}
 
 	@Override
