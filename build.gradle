@@ -1,15 +1,11 @@
-buildscript {
-	repositories {
-		jcenter()
-		maven { url "https://dl.bintray.com/plug-obp/maven" }
-	}
-	dependencies {
-		classpath group: 'fr.ensta-bretagne', name: 'plug-plugin', version: '0.7'
-	}
-}
-
-apply plugin: 'plug.plugin'
 version='1.0.0'
+apply plugin: 'java'
+apply plugin: 'maven-publish'
+
+repositories {
+	mavenCentral()
+	maven { url '/Users/ciprian/Playfield/maven_repository' }
+}
 
 dependencies {
 	compile group: 'io.github.teodorov', name: 'announce4j', version: 'master'
@@ -18,3 +14,30 @@ dependencies {
 	compile group: 'com.fasterxml.jackson.core', name:'jackson-databind', version:'2.7.2'
 }
 
+compileJava.options.encoding = 'UTF-8'
+sourceSets {
+	main {
+		java { srcDir  'src' }
+		resources { srcDir 'resources'}
+	}
+	test {
+		java { srcDir 'tests/src' }
+		resources { srcDir 'tests/resources'}
+	}
+}
+
+publishing {
+	repositories {
+		maven {
+			// change to point to your repo, e.g. http://my.org/repo
+			url = '/Users/ciprian/Playfield/maven_repository'
+		}
+	}
+	publications {
+		jar(MavenPublication) {
+			groupId = 'fr.ensta-bretagne'
+			artifactId = 'obp2-runtime-remote'
+			from components.java
+		}
+	}
+}
