@@ -4,7 +4,7 @@ apply plugin: 'maven-publish'
 
 repositories {
 	mavenCentral()
-	maven { url "${OBP2LocalMavenRepository}" }
+	maven { url "${OBP2ReadOnlyMavenRepository}" }
 }
 
 dependencies {
@@ -30,7 +30,7 @@ publishing {
 	repositories {
 		maven {
 			// change to point to your repo, e.g. http://my.org/repo
-			url = "${OBP2LocalMavenRepository}"
+			url = "${OBP2PublishMavenRepository}"
 		}
 	}
 	publications {
