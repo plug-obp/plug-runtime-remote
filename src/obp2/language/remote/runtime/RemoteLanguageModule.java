@@ -17,6 +17,7 @@ public class RemoteLanguageModule extends LanguageModule<Configuration, RemoteAc
         this.transitionRelation = transitionRelation;
         this.atomicPropositionsEvaluator = new RemoteAtomicPropositionsEvaluator(this, transitionRelation.getDriver());
         this.treeProjector = new RemoteRuntimeView(this);
+        this.marshaller = new RemoteMarshaller(this);
     }
 
     @Override
